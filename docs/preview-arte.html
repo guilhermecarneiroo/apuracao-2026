@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Prévia · três artes para a chance</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#f2f3f1;--fg:#15191a;--muted:#5f6764;--line:#cdd3cf;--track:#dfe3e0;--accent:#0f7a4d;--lula:#c62828;--flavio:#1f5fbf;--sash1:#2a9d5c;--sash2:#f5c400;--off:#c9cfcb;--urna:#d9dcd8;--urna2:#b8bdb9;
+  --font:"Archivo",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--bg:#0f1412;--fg:#e9ece9;--muted:#9aa39f;--line:#2b3430;--track:#222a26;--accent:#2fae72;--lula:#e25757;--flavio:#5a8fe3;--off:#2e3734;--urna:#2a3230;--urna2:#3c4542;color-scheme:dark} }
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-variant-numeric:tabular-nums}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px 60px}
+.eyebrow{font:12px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+h1{font-size:30px;margin:4px 0 0;font-weight:700;font-variation-settings:"wdth" 112;letter-spacing:-.02em}
+h2{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:40px 0 14px;padding-top:12px;border-top:1px solid var(--line)}
+.chance{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-items:end}
+.nome{font:12px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.pv{font-size:56px;font-weight:800;line-height:1;letter-spacing:-.03em;margin-top:8px}
+.l .pv{color:var(--lula)} .f{text-align:right} .f .pv{color:var(--flavio)}
+.fig{display:block;width:120px;height:auto;margin-top:10px} .f .fig{margin-left:auto}
+.barra{grid-column:1/-1;position:relative;height:16px;background:var(--track);display:flex;gap:2px;margin-top:12px;overflow:hidden}
+.barra .a{background:var(--lula);width:61%} .barra .b{background:var(--flavio);width:39%}
+.barra::after{content:"";position:absolute;left:50%;top:0;width:2px;height:100%;background:var(--bg);transform:translateX(-1px)}
+.veredito{grid-column:1/-1;font-size:19px;font-weight:600;margin-top:12px;letter-spacing:-.01em}
+.nota{font:13px/1.5 var(--mono);color:var(--muted);margin-top:14px}
+.urna{display:block;width:150px;height:auto;margin-top:10px} .f .urna{margin-left:auto}
+.fita{display:block;width:150px;height:auto;margin-top:10px} .f .fita{margin-left:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="eyebrow">prévia · chance de vitória · 61 × 39</div>
+<h1>Três artes para a faixa</h1>
+
+<h2>Opção 1 · Pictograma</h2>
+<div class="chance">
+  <div class="l"><div class="nome">Lula</div><svg class="fig" id="p1L" viewBox="0 0 100 130" aria-hidden="true"></svg><div class="pv">61%</div></div>
+  <div class="f"><div class="nome">Flávio</div><svg class="fig" id="p1F" viewBox="0 0 100 130" aria-hidden="true"></svg><div class="pv">39%</div></div>
+  <div class="barra"><div class="a"></div><div class="b"></div></div>
+  <div class="veredito">Empate técnico pela régua.</div>
+</div>
+<div class="nota">busto geométrico em tinta chapada, sem rosto; só a faixa tem cor e enche do ombro ao quadril</div>
+
+<h2>Opção 2 · Foto na moldura da urna</h2>
+<div class="chance">
+  <div class="l"><div class="nome">Lula</div><svg class="urna" id="p2L" viewBox="0 0 150 120" aria-hidden="true"></svg><div class="pv">61%</div></div>
+  <div class="f"><div class="nome">Flávio</div><svg class="urna" id="p2F" viewBox="0 0 150 120" aria-hidden="true"></svg><div class="pv">39%</div></div>
+  <div class="barra"><div class="a"></div><div class="b"></div></div>
+  <div class="veredito">Empate técnico pela régua.</div>
+</div>
+<div class="nota">a tela da urna: foto, número e nome; a faixa cruza a moldura, não o rosto. Se a foto não carregou, aparece a silhueta.</div>
+
+<h2>Opção 3 · Só a faixa</h2>
+<div class="chance">
+  <div class="l"><div class="nome">Lula</div><svg class="fita" id="p3L" viewBox="0 0 150 70" aria-hidden="true"></svg><div class="pv">61%</div></div>
+  <div class="f"><div class="nome">Flávio</div><svg class="fita" id="p3F" viewBox="0 0 150 70" aria-hidden="true"></svg><div class="pv">39%</div></div>
+  <div class="barra"><div class="a"></div><div class="b"></div></div>
+  <div class="veredito">Empate técnico pela régua.</div>
+</div>
+<div class="nota">a fita diagonal como medidor, sem boneco</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+/* faixa: banda entre A (ombro) e B (quadril), meia-largura w; enche até t */
+function banda(A,B,w,t){ const dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy),nx=-dy/L*w,ny=dx/L*w; const P=[A[0]+dx*t,A[1]+dy*t]; return `${A[0]+nx},${A[1]+ny} ${P[0]+nx},${P[1]+ny} ${P[0]-nx},${P[1]-ny} ${A[0]-nx},${A[1]-ny}`; }
+function faixa(A,B,w,pct,clip){ const t=pct/100; return `<g ${clip?`clip-path="url(#${clip})"`:""}><polygon points="${banda(A,B,w,1)}" fill="var(--off)"/><polygon points="${banda(A,B,w,t)}" fill="var(--sash1)"/><polygon points="${banda(A,B,w*0.34,t)}" fill="var(--sash2)"/></g>`; }
+/* 1. pictograma */
+function picto(id,pct,mirror){
+  const corpo=`<path d="M30 62 L70 62 L82 76 L100 130 L0 130 L18 76 Z"/>`;
+  const svg=`<defs><clipPath id="${id}c"><path d="M30 62 L70 62 L82 76 L100 130 L0 130 L18 76 Z"/></clipPath></defs>
+   <g ${mirror?'transform="translate(100 0) scale(-1 1)"':""}>
+   <circle cx="50" cy="30" r="20" fill="var(--fg)"/><rect x="42" y="48" width="16" height="16" fill="var(--fg)"/><g fill="var(--fg)">${corpo}</g>
+   ${faixa([16,70],[80,130],9,pct,id+"c")}</g>`;
+  $(id).innerHTML=svg;
+}
+/* 2. moldura da urna com foto */
+function urna(id,pct,mirror,foto,num,nome){
+  const svg=`<defs><clipPath id="${id}f"><rect x="12" y="12" width="66" height="84" rx="2"/></clipPath></defs>
+   <rect x="0" y="0" width="150" height="120" rx="6" fill="var(--urna)"/><rect x="0" y="0" width="150" height="120" rx="6" fill="none" stroke="var(--urna2)" stroke-width="2"/>
+   <rect x="12" y="12" width="66" height="84" fill="var(--urna2)"/>
+   <g clip-path="url(#${id}f)"><circle cx="45" cy="46" r="18" fill="var(--bg)" opacity=".8"/><path d="M15 96 Q45 60 75 96 Z" fill="var(--bg)" opacity=".8"/>${foto?`<image href="${foto}" x="12" y="12" width="66" height="84" preserveAspectRatio="xMidYMid slice"/>`:""}</g>
+   <text x="88" y="40" font-family="IBM Plex Mono,monospace" font-size="26" font-weight="600" fill="var(--fg)">${num}</text>
+   <text x="88" y="60" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--fg)" letter-spacing="1">${nome}</text>
+   <text x="88" y="78" font-family="IBM Plex Mono,monospace" font-size="9" fill="var(--muted)" letter-spacing="1">PRESIDENTE</text>
+   <defs><clipPath id="${id}m"><rect x="0" y="0" width="150" height="120" rx="6"/></clipPath></defs>${faixa([84,124],[154,74],8,pct,id+"m")}`;
+  $(id).innerHTML=svg; if(mirror){ /* a moldura não espelha; só a faixa muda de lado */ }
+}
+/* 3. só a faixa */
+function fita(id,pct,mirror){ $(id).innerHTML=`<g ${mirror?'transform="translate(150 0) scale(-1 1)"':""}>${faixa([8,10],[142,60],14,pct)}</g>`; }
+picto("p1L",61,false); picto("p1F",39,true);
+urna("p2L",61,false,"","13","LULA"); urna("p2F",39,true,"","22","FLÁVIO");   // fotos oficiais: o DivulgaCand recusou o download (403); silhueta no lugar
+fita("p3L",61,false); fita("p3F",39,true);
+})();
+</script>
+</body>
+</html>
