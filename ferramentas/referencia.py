@@ -45,9 +45,9 @@ def curva_2t_2022(path):
             L = int(line[ix["LULA_QT_VOTOS_TOT_ACUMULADO"]]); B = int(line[ix["JAIR_BOLSONARO_QT_VOTOS_TOT_ACUMULADO"]])
             V = int(line[ix["QT_VOTOS_CONCORRENTES_ACUMULADO"]]); sec = int(line[ix["QT_SECOES_TOT_ACUMULADO"]])
             br = int(line[ix["BRANCO_QT_VOTOS_TOT_ACUMULADO"]]); nu = int(line[ix["NULO_QT_VOTOS_TOT_ACUMULADO"]]); tv = int(line[ix["QT_VOTOS_TOTAL_ACUMULADO"]])
-            dt = line[ix["DT_TOTALIZACAO"]].strip()
+            ap = int(line[ix["QT_APTOS_TOT_ACUMULADO"]]); dt = line[ix["DT_TOTALIZACAO"]].strip()
         except (ValueError, KeyError): continue
-        if V > 0: rows.append((pct, sec, dt, L, B, V, br, nu, tv))
+        if V > 0: rows.append((pct, sec, dt, L, B, V, br, nu, tv, ap))
     rows.sort(key=lambda x: x[1]); fin = rows[-1]; mf = 100 * (fin[3] - fin[4]) / fin[5]
     def ponto(t):
         b = min(rows, key=lambda x: abs(x[0] - t)); m = 100 * (b[3] - b[4]) / b[5]
@@ -59,9 +59,20 @@ def curva_2t_2022(path):
         m = 100 * (x[3] - x[4]) / x[5]
         if prev is not None and prev < 0 <= m: virada = {"pst": round(x[0], 2), "hora": x[2][-8:-3]}; break
         prev = m
+    # série para o ensaio: todas as linhas até 5% (passo 0,1) e depois a cada 0,25% das seções
+    alvos = [round(0.1 * i, 1) for i in range(1, 50)] + [round(5 + 0.25 * i, 2) for i in range(0, 381)]
+    vistos, serie = set(), []
+    for t in alvos:
+        b = min(rows, key=lambda x: abs(x[0] - t))
+        if b[1] in vistos: continue
+        vistos.add(b[1])
+        serie.append([round(b[0], 2), b[2][-8:], round(100 * b[3] / b[5], 2), round(100 * b[4] / b[5], 2),
+                      round(100 * b[6] / b[8], 2), round(100 * b[7] / b[8], 2), round(100 * (1 - b[8] / b[9]), 2) if b[9] else None])
+    serie.sort(key=lambda x: x[0])
     return {"final": {"lula": round(100 * fin[3] / fin[5], 2), "bolsonaro": round(100 * fin[4] / fin[5], 2), "margem": round(mf, 2),
-                      "bn": round(100 * (fin[6] + fin[7]) / fin[8], 2), "hora": fin[2]},
-            "pontos": pontos, "virada": virada, "fonte": HIST_2T}
+                      "bn": round(100 * (fin[6] + fin[7]) / fin[8], 2), "hora": fin[2], "secoes": fin[1], "aptos": fin[9]},
+            "pontos": pontos, "virada": virada, "fonte": HIST_2T,
+            "serie": {"campos": ["pst", "hora", "lula", "bolsonaro", "brancos", "nulos", "abstencao"], "linhas": serie}}
 
 def detalhe_2t_2022(path):
     z = zipfile.ZipFile(path); agg = {}
@@ -146,7 +157,8 @@ def main():
            "virada2022": curva["virada"], "final2022": curva["final"],
            "uf2022": {u: {"margem": u22[u]["margem"], "lula": u22[u]["lula"], "abst": det[u]["abst"], "bn": det[u]["bn"]} for u in UFS + ["br"]},
            "uf2026": {u: {"margem": u26[u]["margem"], "lula": u26[u]["lula"], "flavio": u26[u]["flavio"], "abst": u26[u]["abst"], "bn": u26[u]["bn"]} for u in UFS + ["br"]},
-           "prior": prior}
+           "prior": prior,
+           "replay2022": curva.get("serie")}
     open(os.path.join(DOCS, "referencia.js"), "w").write("// gerado por ferramentas/referencia.py a partir dos arquivos oficiais do TSE; não editar à mão\nwindow.REF=" + json.dumps(ref, ensure_ascii=False, separators=(",", ":")) + ";\n")
     print(f"ok: docs/referencia.js ({os.path.getsize(os.path.join(DOCS,'referencia.js'))} bytes)")
     print("final 2T 2022:", curva["final"], "virada:", curva["virada"])

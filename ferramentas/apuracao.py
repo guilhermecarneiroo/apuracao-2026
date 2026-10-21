@@ -7,10 +7,12 @@ Referências em dados/*.json, geradas por ferramentas/referencia.py.
 
 Uso:  python3 ferramentas/apuracao.py                 # uma leitura
       python3 ferramentas/apuracao.py --loop 120      # a cada 2 min, com log em dados/log_2t_2026.csv (começar às 17h de 25/10)
+                                                       # e os arquivos brutos do TSE (nacional + 27 UFs + exterior) em dados/noite/*.json.gz
+      python3 ferramentas/apuracao.py --sem-bruto     # só o resumo, sem gravar os brutos
       python3 ferramentas/apuracao.py --probe         # testa se os arquivos existem no TSE
       python3 ferramentas/apuracao.py --demo          # régua com dados fictícios
 """
-import argparse, csv, datetime, json, math, os, sys, time, urllib.error, urllib.request
+import argparse, concurrent.futures, csv, datetime, gzip, json, math, os, sys, time, urllib.error, urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -20,6 +22,7 @@ UA = {"User-Agent": "Mozilla/5.0"}
 LULA, FLAVIO = "13", "22"
 K = 1.0
 UFS_PADRAO = "sp,mg,rj,ba,pe"
+UFS_TODAS = "ac al ap am ba ce df es go ma mt ms mg pa pb pr pe pi rj rn rs ro rr sc sp se to zz".split()
 NE = {"al", "ba", "ce", "ma", "pb", "pe", "pi", "rn", "se"}
 
 def ler_json(nome):
@@ -126,11 +129,29 @@ def regua(pst, L, F, bn, abst, por_uf, ab, log=None, ts=None, fim=False):
                      + [f"{linhas[u][0]:+.2f}" if u in linhas else "" for u in UFS_PADRAO.split(",")]
                      + [f"{linhas[u][1]}" if u in linhas and linhas[u][1] is not None else "" for u in UFS_PADRAO.split(",")])
 
+def gravar_bruto(pasta, u_j, ab_j, ufs_j):
+    """Guarda os arquivos do TSE desta leitura (nacional, -ab e os -u de todas as UFs) em um .json.gz, um por versão do arquivo nacional."""
+    os.makedirs(pasta, exist_ok=True)
+    chave = f"{u_j.get('dg', '')}T{u_j.get('hg', '')}".replace("/", "").replace(":", "")
+    caminho = os.path.join(pasta, f"{chave}.json.gz")
+    if os.path.exists(caminho): return None
+    with gzip.open(caminho, "wt", encoding="utf-8") as f:
+        json.dump({"lida_em": datetime.datetime.now().isoformat(timespec="seconds"), "ab": ab_j, "u": {"br": u_j, **ufs_j}}, f, ensure_ascii=False, separators=(",", ":"))
+    return caminho
+
 def leitura(args, log=None):
     U = urls(args.ele)
     ab_j = get(U["ab"], quiet=True); ab = parse_ab(ab_j) if ab_j else {}
     u_j = get(U["u"], quiet=True)
     if not u_j: print(f"{datetime.datetime.now():%H:%M:%S}: arquivo nacional -u inexistente; -ab: {ab.get('br', {}).get('pst', 0):.2f}% das seções."); return False
+    # estados: só os do detalhe, ou todas as 27 + exterior quando se grava o bruto
+    quer = [u.strip().lower() for u in args.ufs.split(",")]
+    buscar = UFS_TODAS if args.bruto else quer
+    with concurrent.futures.ThreadPoolExecutor(8) as ex:
+        ufs_j = {uf: j for uf, j in ex.map(lambda uf: (uf, get(urls(args.ele, uf)["u"], quiet=True)), buscar) if j}
+    if args.bruto:
+        c = gravar_bruto(args.bruto, u_j, ab_j, ufs_j)
+        if c: print(f"  bruto gravado: {os.path.relpath(c, RAIZ)} ({len(ufs_j)} UFs)")
     votos, tot = parse_u(u_j); L, F, soma = shares(votos)
     pst = tot["pst"] if tot["pst"] is not None else ab.get("br", {}).get("pst", 0.0)
     if not tot["tv"] or soma == 0:
@@ -138,8 +159,8 @@ def leitura(args, log=None):
               f"Chance pelas pesquisas: Flávio {PRIOR['p_flavio']:.0f}% ({PRIOR['n']} institutos, corrigida {PRIOR['mu']:+.1f} ± {PRIOR['sigma0']})."); return False
     bn = 100 * ((tot["vb"] or 0) + (tot["vn"] or 0)) / tot["tv"] if tot["tv"] else None
     por_uf = {}
-    for uf in args.ufs.split(","):
-        uf = uf.strip().lower(); j = get(urls(args.ele, uf)["u"], quiet=True)
+    for uf in quer:
+        j = ufs_j.get(uf)
         if not j: continue
         v_uf, t_uf = parse_u(j)
         if sum(v_uf.values()) > 0: por_uf[uf] = v_uf
@@ -168,7 +189,10 @@ if __name__ == "__main__":
     ap.add_argument("--ele", type=int, default=6258); ap.add_argument("--loop", type=int, default=0, help="segundos entre leituras (0 = uma só)")
     ap.add_argument("--log", default=os.path.join(RAIZ, "dados", "log_2t_2026.csv")); ap.add_argument("--ufs", default=UFS_PADRAO)
     ap.add_argument("--probe", action="store_true"); ap.add_argument("--demo", action="store_true")
+    ap.add_argument("--bruto", default=os.path.join(RAIZ, "dados", "noite"), help="pasta dos arquivos brutos do TSE por leitura (vazio = não gravar)")
+    ap.add_argument("--sem-bruto", action="store_true", help="não gravar os arquivos brutos")
     a = ap.parse_args()
+    if a.sem_bruto: a.bruto = ""
     if a.probe: probe(a); sys.exit()
     if a.demo: demo(); sys.exit()
     logf = log = None

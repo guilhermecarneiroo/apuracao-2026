@@ -177,6 +177,7 @@ summary{cursor:pointer;color:var(--fg);font-weight:600;font-size:16px}
   <p><b>Estados.</b> SP, MG, RJ, BA e PE com a margem atual e a fatia das seções do estado já contadas. O triângulo de cima marca o 2º turno de 2022; o de baixo, o 1º turno de 2026 contado só entre Lula e Flávio, sem os terceiros. Barra perto do triângulo de cima, o estado repete 2022; perto do de baixo, repete o 1º turno.</p>
   <p><b>Abstenção por estado.</b> Cada estado contra ele mesmo no 1º turno e em 2022, com a fatia das seções já contadas. Enquanto a fatia é pequena, o número reflete as seções que entraram, não o estado.</p>
   <p><b>Curva da noite.</b> A leitura desta noite, em verde, sobre três curvas de referência: como a margem parcial deveria caminhar se o final fosse Lula +2, empate ou Flávio +2, com a ordem de chegada de 2022. Linha verde acima da curva do empate, Lula tende; abaixo, Flávio.</p>
+  <p><b>Ensaio.</b> <a href="?replay=2022">?replay=2022</a> percorre a apuração real do 2º turno de 2022 ponto a ponto, para aprender a ler a página antes de domingo; a chance ali vem só da régua, sem pesquisas, e Bolsonaro aparece nas casas de Flávio.</p>
   <p><b>Leituras neste aparelho.</b> Cada atualização fica guardada no navegador, com a implícita da hora. Nada sai do aparelho; "Limpar histórico" zera.</p>
 </details>
 
@@ -197,12 +198,15 @@ const VIRADA=REF.virada2022||{pst:66.78,hora:"18:42"};
 const F22=REF.final2022||{margem:1.8,bn:4.59};
 const UF22=REF.uf2022||{}, UF26=REF.uf2026||{};
 const BR22=UF22.br||{abst:20.58,bn:4.59}, BR26=UF26.br||{abst:21.08,bn:4.77};
-const PRIOR=REF.prior||null;
+let PRIOR=REF.prior||null, REPLAY=false;
+const PRIOR_PLANO={mu:0,sigma0:12,p_flavio:50,p_flavio_sem_correcao:50,mu_bruta:0,n:0,corte:"",ultimas:[]};   // ensaio: chance só pela régua
 function Phi(z){ const t=1/(1+0.2316419*Math.abs(z)), d=0.3989423*Math.exp(-z*z/2); const p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); return z>0?1-p:p; }
 function sigmaRegua(ef,fim){ return fim?0.01:0.3*Math.abs(ef)+0.15; }   // incerteza da implícita: 30% da ordem de chegada ainda por vir, mais um piso
 function posterior(imp,ef,fim){ if(!PRIOR) return null; const w0=1/(PRIOR.sigma0*PRIOR.sigma0), sr=sigmaRegua(ef,fim), wr=1/(sr*sr); const mu=(PRIOR.mu*w0+imp*wr)/(w0+wr), sd=Math.sqrt(1/(w0+wr)); const pL=100*Phi(mu/sd); return {mu,sd,sr,pL,pF:100-pL,peso:100*wr/(w0+wr)}; }
 function renderChance(post){
   if(!PRIOR){ $("pmeta").textContent="sem pesquisas carregadas"; return; }
+  if(REPLAY){ const pF=post?post.pF:50, pL=100-pF; $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
+    $("pmeta").textContent=post?`ensaio: chance só pela régua, sem pesquisas (incerteza da régua ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua, sem pesquisas"; return; }
   const pF=post?post.pF:PRIOR.p_flavio, pL=100-pF;
   $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%";
   const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
@@ -210,6 +214,7 @@ function renderChance(post){
     :`pelas pesquisas: ${PRIOR.n} institutos, campo a partir de ${PRIOR.corte.slice(8,10)}/${PRIOR.corte.slice(5,7)}, margem média Flávio ${fmt(-PRIOR.mu_bruta,1)}, corrigida ${fmt(-PRIOR.mu,1)} · atualiza com a apuração`;
 }
 function renderInst(imp,fim){
+  if(REPLAY){ $("inst").innerHTML=`<div class="vazio">no ensaio as pesquisas ficam de fora</div>`; $("instmeta").textContent=""; return; }
   if(!PRIOR||!PRIOR.ultimas||!PRIOR.ultimas.length){ $("inst").innerHTML=`<div class="vazio">sem pesquisas carregadas</div>`; $("instmeta").textContent=""; return; }
   const rows=PRIOR.ultimas.map(r=>({...r,dist:imp==null?null:imp-r.bruta}));
   if(imp!=null) rows.sort((a,b)=>Math.abs(a.dist)-Math.abs(b.dist));
@@ -260,6 +265,9 @@ function leituraTexto(pst,m,imp){
   return t;
 }
 
+/* dado parado: o arquivo do TSE (dg+hg) não muda há mais de LIMITE_PARADO durante a apuração */
+const LIMITE_PARADO=10*60*1000; let paradoKey=null, paradoDesde=0;
+function estaParado(key,agora){ if(key!==paradoKey){ paradoKey=key; paradoDesde=agora; return false; } return agora-paradoDesde>=LIMITE_PARADO; }
 function render(br,ab,ufj){
   const t=tot(br), v=cands(br), sh=shares(v), pst=t.pst??0;
   $("abstref").textContent=`2022: ${fmt(BR22.abst,1)} · 1º turno: ${fmt(BR26.abst,1)}`;
@@ -274,6 +282,7 @@ function render(br,ab,ufj){
   const post=posterior(imp,ef,fim); renderChance(post); renderInst(imp,fim);
   $("status").textContent=fim?"totalização finalizada":"em andamento"; $("status").className="pill on";
   $("meta").textContent=`arquivo do TSE: ${br.dg||""} ${br.hg||""} · seções ${fmt(t.st,0)} de ${fmt(t.ts,0)}`;
+  if(!DEMO&&!fim&&estaParado((br.dg||"")+" "+(br.hg||""),Date.now())){ $("status").textContent=`TSE parado desde ${(br.hg||"").slice(0,5)}`; $("status").className="pill warn"; }
   $("pL").textContent=fmt(sh.L,1); $("pF").textContent=fmt(sh.F,1);
   $("mg").textContent=sgn(m,1); $("mg").className="v "+cls(m); $("mgq").textContent=(m>0.05?"Lula à frente":(m<-0.05?"Flávio à frente":"empate"))+" · margem em votos válidos";
   const bar=$("barra").children; bar[0].style.width=sh.L+"%"; bar[1].style.width=sh.F+"%";
@@ -345,8 +354,34 @@ function demo(q){
   const ab={abr:[["ba",19.1,33],["ma",22.4,30],["pe",17.0,35],["rj",22.6,58],["ce",16.1,36],["sp",21.0,63],["mg",21.9,55],["pa",21.8,24],["pi",17.9,20],["rs",19.0,70],["pr",18.2,72],["sc",17.0,75],["al",22.0,38],["pb",16.0,40],["rn",17.1,42],["se",18.2,45]].map(([cd,pa,p])=>({cdabr:cd,e:{pan:String(pa)},s:{pstn:String(Math.min(99,p*pst/50))}}))};
   render(br,ab,ufj); $("status").textContent="DEMO · dados fictícios"; $("status").className="pill warn"; $("meta").textContent=`exemplo aos ${fmt(pst,0)}% das seções com final ${sgn(fin,1)}; nada disto é real`;
 }
+/* ?replay=2022[&ms=400]: ensaio com a apuração real do 2º turno de 2022, ponto a ponto */
+function replay(q){
+  const serie=(REF.replay2022&&REF.replay2022.linhas)||[], fin=REF.final2022||{};
+  if(!serie.length){ $("erro").hidden=false; $("erro").textContent="A referência não tem a série de 2022."; return; }
+  DEMO=true; REPLAY=true; hist=[]; PRIOR=PRIOR_PLANO;
+  const ms=Math.max(60,num(q.get("ms"))??400), ts=fin.secoes||472075, te=fin.aptos||156454011;
+  let i=0, timer=null;
+  function frame(){
+    const [pst,hora,L,B,vb,vn,pa]=serie[i]; const tv=1000000, st=Math.round(ts*pst/100);
+    const br={dg:"30/10/2022",hg:hora,and:pst>=100?"f":"n",carg:[{agr:[{par:[{cand:[{n:LULA,vap:String(Math.round(L*10000))},{n:FLAVIO,vap:String(Math.round(B*10000))}]}]}]}],
+      s:{ts:String(ts),st:String(st),pstn:String(pst)},e:{te:String(te),pan:pa==null?null:String(pa)},v:{tv:String(tv),vb:String(Math.round(tv*vb/100)),vn:String(Math.round(tv*vn/100))}};
+    render(br,null,{});
+    $("status").textContent=`ENSAIO · 2º turno de 2022 · ${hora.slice(0,5)}`; $("status").className="pill warn";
+    $("meta").textContent=`apuração real de 30/10/2022, Lula × Bolsonaro (Bolsonaro nas casas de Flávio) · ponto ${i+1} de ${serie.length}`;
+    i++; if(i>=serie.length){ clearInterval(timer); timer=null; $("btn").textContent="Terminou"; }
+  }
+  function tocar(){ if(timer) return; timer=setInterval(frame,ms); $("btn").textContent="Pausar"; }
+  function pausar(){ clearInterval(timer); timer=null; $("btn").textContent="Continuar"; }
+  const b=$("btn"), nb=b.cloneNode(true); b.replaceWith(nb);
+  nb.addEventListener("click",()=>{ if(i>=serie.length) return; timer?pausar():tocar(); });
+  $("auto").parentElement.hidden=true;
+  const l=$("limpar"), nl=l.cloneNode(true); l.replaceWith(nl); nl.textContent="Reiniciar";
+  nl.addEventListener("click",()=>{ pausar(); i=0; hist=[]; renderChart(); $("tap").textContent="Toque no gráfico para ler um ponto."; tocar(); });
+  $("ufs").innerHTML=`<div class="vazio">o ensaio não tem dados por estado</div>`;
+  frame(); tocar();
+}
 const q=new URLSearchParams(location.search);
-if(q.has("demo")){ demo(q); } else { renderChart(); atualizar(); }
+if(q.has("replay")){ replay(q); } else if(q.has("demo")){ demo(q); } else { renderChart(); atualizar(); }
 })();
 </script>
 </body>
