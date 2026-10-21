@@ -24,7 +24,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px
 [hidden]{display:none!important}
 .wrap{max-width:600px;margin:0 auto;padding-block:18px 48px;padding-inline:16px}
 a{color:var(--accent)}
-.mono,.eyebrow,h2,.pill,.meta,.row .l3,.k,.ks .k,.leg,.nota,summary{font-family:var(--mono)}
+.mono,.eyebrow,h2,.pill,.meta,.k,.ks .k,.leg,.nota,summary{font-family:var(--mono)}
 .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
 h1{font-size:34px;margin:4px 0 0;font-weight:700;font-variation-settings:"wdth" 112;letter-spacing:-.02em;line-height:1.05;text-wrap:balance}
 h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:36px 0 12px;font-weight:600;padding-top:12px;border-top:1px solid var(--line)}
@@ -33,6 +33,19 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 .pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
 .pill.on{color:var(--accent)} .pill.warn{color:var(--warn)}
 .meta{font-size:13px;color:var(--muted);line-height:1.5}
+.progresso{height:3px;background:var(--track);margin-top:10px} .progresso div{height:100%;background:var(--accent);transition:width .4s ease}
+.veredito{grid-column:1/-1;font-size:19px;font-weight:600;line-height:1.35;letter-spacing:-.01em;margin-top:12px;text-wrap:balance}
+.faixa{margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
+.faixa-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.faixa .k{font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.faixa .fv{font-size:22px;font-weight:800;letter-spacing:-.02em;font-variation-settings:"wdth" 92}
+.faixa-eixo{position:relative;height:14px;margin-top:12px;background:var(--track)}
+.fx-band{position:absolute;top:0;height:100%;background:var(--muted);opacity:.35;left:50%;width:0}
+.fx-zero{position:absolute;left:50%;top:-4px;width:2px;height:22px;background:var(--fg);transform:translateX(-1px)}
+.fx-dot{position:absolute;top:50%;left:50%;width:14px;height:14px;border-radius:50%;background:var(--fg);transform:translate(-50%,-50%);border:2px solid var(--bg);display:none}
+.fx-dot.on{display:block}
+.faixa-leg{display:flex;justify-content:space-between;font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+#marco{margin-top:10px}
 /* chance: o placar de TV */
 .chance{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-items:end}
 .chance .nome{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
@@ -58,7 +71,7 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 .row .uf{font-size:17px;font-weight:600;letter-spacing:-.01em;min-width:0}
 .row .m{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variation-settings:"wdth" 92;flex:none}
 .row .l2{font-size:15px;color:var(--muted);margin-top:6px;line-height:1.45}
-.row .l3{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.row .l3{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.5}
 .apostas .row{padding:18px 0}
 .apostas .row .uf{font-size:16px}
 .apostas .row .m{font-size:40px}
@@ -128,18 +141,26 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 <div class="topo">
   <div class="eyebrow">2º turno · 25 de outubro de 2026 · Divulga/TSE</div>
   <h1>Apuração 2026</h1>
-  <span id="status" class="pill">carregando…</span>
+  <div class="progresso" aria-hidden="true"><div id="progfill" style="width:0%"></div></div>
+  <span id="status" class="pill" role="status" aria-live="polite">carregando…</span>
   <div class="meta" id="meta">—</div>
 </div>
 
 <div id="erro" class="erro" hidden></div>
 
 <h2><span>Chance de vitória</span><button class="help" type="button" data-ajuda="chance" aria-label="Como ler a chance de vitória">?</button></h2>
-<div class="chance" aria-label="Chance de vitória">
+<div class="chance" aria-label="Chance de vitória" aria-live="polite">
   <div class="l"><div class="nome">Lula</div><div class="pv" id="pLula">–</div></div>
   <div class="f"><div class="nome">Flávio</div><div class="pv" id="pFlavio">–</div></div>
   <div class="barra" id="pbar" aria-hidden="true"><div class="l" style="width:50%"></div><div class="f" style="width:50%"></div></div>
+  <div class="veredito" id="veredito">—</div>
   <div class="meta" id="pmeta">—</div>
+</div>
+<div class="faixa" aria-label="Margem final esperada">
+  <div class="faixa-top"><span class="k">margem final esperada</span><span class="fv" id="faixav">–</span></div>
+  <div class="faixa-eixo" id="faixa"><div class="fx-band" id="fxband"></div><div class="fx-zero"></div><div class="fx-dot" id="fxdot"></div></div>
+  <div class="faixa-leg"><span>Lula +8</span><span>empate</span><span>Flávio +8</span></div>
+  <div class="meta" id="marco">—</div>
 </div>
 <div class="placar2" aria-label="Placar">
   <div class="cand l"><div class="nome">Lula · 13</div><div class="pct" id="pL">–</div></div>
@@ -309,16 +330,26 @@ function renderApostas(t,sh,pst,ab,ufj,fim){
 const PRIOR_PLANO={mu:0,sigma0:12,p_flavio:50,p_flavio_sem_correcao:50,mu_bruta:0,n:0,corte:"",ultimas:[]};   // ensaio: chance só pela régua
 function Phi(z){ const t=1/(1+0.2316419*Math.abs(z)), d=0.3989423*Math.exp(-z*z/2); const p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); return z>0?1-p:p; }
 function sigmaRegua(ef,fim){ return fim?0.01:0.3*Math.abs(ef)+0.15; }   // incerteza da implícita: 30% da ordem de chegada ainda por vir, mais um piso
-function posterior(imp,ef,fim){ if(!PRIOR) return null; const w0=1/(PRIOR.sigma0*PRIOR.sigma0), sr=sigmaRegua(ef,fim), wr=1/(sr*sr); const mu=(PRIOR.mu*w0+imp*wr)/(w0+wr), sd=Math.sqrt(1/(w0+wr)); const pL=100*Phi(mu/sd); return {mu,sd,sr,pL,pF:100-pL,peso:100*wr/(w0+wr)}; }
+function posterior(imp,ef,fim){ if(!PRIOR) return null; const w0=1/(PRIOR.sigma0*PRIOR.sigma0), sr=sigmaRegua(ef,fim), wr=1/(sr*sr); const mu=(PRIOR.mu*w0+imp*wr)/(w0+wr), sd=Math.sqrt(1/(w0+wr)); let pL=100*Phi(mu/sd); if(!fim) pL=Math.max(1,Math.min(99,pL)); return {mu,sd,sr,pL,pF:100-pL,peso:100*wr/(w0+wr),fim}; }   // antes do fim, nunca 0 nem 100
+const MARCOS=[15,50,67,90,99];
+function proximoMarco(pst){ const m=MARCOS.find(x=>x>pst); if(m==null) return "últimas seções: em 2022, 100% só à 0h18"; const nomes={15:"a leitura da régua começa",50:"metade das seções",67:"virada de Lula em 2022",90:"reta final",99:"quase tudo contado"}; const h=HORAS[String(m)]||HORAS[String(m===67?68:m)]; return `próximo marco: ${m}% das seções, ${nomes[m]}${h?` · em 2022 foi às ${String(h).replace(":","h")}`:""}`; }
+function renderFaixa(mu,sd,pst){
+  const LIM=8, pos=x=>50+50*Math.max(-LIM,Math.min(LIM,x))/LIM;
+  if(mu==null){ $("faixav").textContent="–"; $("fxband").style.left="50%"; $("fxband").style.width="0"; $("fxdot").className="fx-dot"; return; }
+  const a=pos(mu-sd), b=pos(mu+sd); $("fxband").style.left=Math.min(a,b)+"%"; $("fxband").style.width=Math.abs(b-a)+"%";
+  $("fxdot").style.left=pos(mu)+"%"; $("fxdot").className="fx-dot on"; $("fxdot").style.background=mu>0.05?"var(--lula)":(mu<-0.05?"var(--flavio)":"var(--fg)");
+  $("faixav").textContent=`${mu>0.05?"Lula":(mu<-0.05?"Flávio":"empate")} ${fmt(Math.abs(mu),1)} ± ${fmt(sd,1)}`; $("faixav").className="fv "+cls(mu);
+}
 function renderChance(post){
   if(!PRIOR){ $("pmeta").textContent="sem pesquisas carregadas"; return; }
   if(REPLAY){ const pF=post?post.pF:50, pL=100-pF; $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
-    $("pmeta").textContent=post?`ensaio: chance só pela régua, sem pesquisas (incerteza da régua ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua, sem pesquisas"; return; }
+    $("pmeta").textContent=post?`ensaio: chance só pela régua, sem pesquisas (incerteza da régua ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua, sem pesquisas"; if(post) renderFaixa(post.mu,post.sd); return; }
   const pF=post?post.pF:PRIOR.p_flavio, pL=100-pF;
   $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%";
   const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
   $("pmeta").textContent=post?`pelas pesquisas, antes da urna: Flávio ${fmt(PRIOR.p_flavio,0)}% · a apuração já responde por ${fmt(post.peso,0)}% desta chance (incerteza da régua ±${fmt(post.sr,1)})`
     :`pelas pesquisas: ${PRIOR.n} institutos, campo a partir de ${PRIOR.corte.slice(8,10)}/${PRIOR.corte.slice(5,7)}, margem média Flávio ${fmt(-PRIOR.mu_bruta,1)}, corrigida ${fmt(-PRIOR.mu,1)} · atualiza com a apuração`;
+  if(post){ renderFaixa(post.mu,post.sd); } else { renderFaixa(PRIOR.mu,PRIOR.sigma0); $("veredito").textContent=pF>=60?"Flávio é o favorito pelas pesquisas, com a apuração por começar.":(pF<=40?"Lula é o favorito pelas pesquisas, com a apuração por começar.":"Empate pelas pesquisas, com a apuração por começar."); $("marco").textContent="a divulgação começa às 17h de Brasília · em 2022, 15% das seções foi às 17h41"; }
 }
 function renderInst(imp,fim){
   if(REPLAY){ $("inst").innerHTML=`<div class="vazio">no ensaio as pesquisas ficam de fora</div>`; $("instmeta").textContent=""; return; }
@@ -386,6 +417,9 @@ function render(br,ab,ufj){
   }
   const m=sh.L-sh.F, ef=efeito(pst), imp=m-K*ef, fim=(br.and==="f"||pst>=99.99);
   const post=posterior(imp,ef,fim); renderChance(post); renderInst(imp,fim);
+  $("veredito").textContent=fim?(m>0?"Lula venceu, pela totalização do TSE.":"Flávio venceu, pela totalização do TSE."):leituraTexto(pst,m,imp);
+  $("marco").textContent=fim?"totalização encerrada":proximoMarco(pst);
+  $("progfill").style.width=Math.min(100,pst)+"%";
   $("status").textContent=fim?"totalização finalizada":"em andamento"; $("status").className="pill on";
   $("meta").textContent=`arquivo do TSE: ${br.dg||""} ${br.hg||""} · seções ${fmt(t.st,0)} de ${fmt(t.ts,0)}`;
   if(!DEMO&&!fim&&estaParado((br.dg||"")+" "+(br.hg||""),Date.now())){ $("status").textContent=`TSE parado desde ${(br.hg||"").slice(0,5)}`; $("status").className="pill warn"; }

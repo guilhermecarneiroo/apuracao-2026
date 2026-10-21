@@ -26,6 +26,14 @@
 
 Paleta de gráfico (lula, flávio, acento) validada com o validador da skill de dataviz nos dois fundos: banda de luminosidade, croma, separação para daltonismo (ΔE ≥ 20) e contraste ≥ 3:1. Texto de valores usa a cor do candidato só quando o número é dele; o resto fica em tinta e muted.
 
+## Componentes próprios
+
+- **Sublinhado de progresso**: a linha sob o título é a fatia de seções apuradas, em verde CONFIRMA sobre o trilho.
+- **Placar de chance**: dois percentuais grandes, barra dividida com tique nos 50%, frase de leitura embaixo.
+- **Faixa de margem**: eixo de −8 a +8, banda cinza = ±1 desvio, ponto na cor de quem leva.
+- **Linha de lista**: filete superior, título à esquerda, número à direita, duas linhas de apoio.
+- **Painel de ajuda**: `<dialog>` que sobe do rodapé; botão "?" redondo em mono.
+
 ## Regras
 
 - Uma coluna de 600px, gutter de 16px, `padding-block` no wrapper.
