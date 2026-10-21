@@ -54,14 +54,14 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 .lista{display:flex;flex-direction:column}
 .row{padding:14px 0;border-top:1px solid var(--line)}
 .row:first-child{border-top:0;padding-top:4px}
-.row .l1{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.row .l1{display:flex;justify-content:space-between;align-items:baseline;gap:12px} .row .l1 .uf{flex:1 1 auto}
 .row .uf{font-size:17px;font-weight:600;letter-spacing:-.01em;min-width:0}
 .row .m{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variation-settings:"wdth" 92;flex:none}
 .row .l2{font-size:15px;color:var(--muted);margin-top:6px;line-height:1.45}
 .row .l3{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
 .apostas .row{padding:18px 0}
 .apostas .row .uf{font-size:16px}
-.apostas .row .m{font-size:44px}
+.apostas .row .m{font-size:40px}
 .apostas .row .m.off{color:var(--muted);font-weight:400;font-size:28px}
 .apostas .row .l2{color:var(--fg)}
 /* barras por estado */
@@ -102,8 +102,24 @@ details b{color:var(--fg)}
 summary{cursor:pointer;color:var(--fg);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.1em;padding:12px 0;border-top:1px solid var(--line)}
 details.detalhes h2:first-of-type{margin-top:18px}
 .vazio{color:var(--muted);font-size:14px;font-family:var(--mono)}
-.nota{font-size:12px;color:var(--muted);margin-top:36px;padding-top:12px;border-top:1px solid var(--line);line-height:1.6}
-@media (prefers-reduced-motion: no-preference){ .pv,.pct,.m,.v{transition:color .25s} }
+.nota{font-size:12px;color:var(--muted);margin-top:36px;padding-top:12px;border-top:1px solid var(--line);line-height:1.6;font-family:var(--mono)}
+.nota button.link{font:inherit;color:var(--accent);background:none;border:0;padding:0;min-height:0;text-decoration:underline;cursor:pointer;border-radius:0}
+/* ajuda: botão "?" e painel que sobe por cima da tela */
+h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.help{font:600 12px/1 var(--mono);width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);padding:0;min-height:0;display:inline-flex;align-items:center;justify-content:center;flex:none;cursor:pointer;letter-spacing:0}
+.help:hover{border-color:var(--fg);color:var(--fg)}
+.row .uf .help{vertical-align:middle;margin-left:6px;position:relative;top:-1px}
+.folha{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:600px;max-height:82vh;max-height:82dvh;border:0;border-top:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0;overflow:hidden;display:none;flex-direction:column}
+.folha[open]{display:flex}
+.folha::backdrop{background:rgba(10,14,12,.55)}
+.folha-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.folha-top h3{margin:0;font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600}
+.folha-top button{min-height:36px;padding:8px 12px;font-size:13px}
+.folha-corpo{padding:14px 16px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto;font-size:16px;line-height:1.55;color:var(--fg)}
+.folha-corpo p{margin:0 0 12px;max-width:62ch} .folha-corpo p:last-child{margin-bottom:0}
+.folha-corpo b{font-weight:600}
+.folha-corpo .mini{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:16px 0 6px}
+@media (prefers-reduced-motion: no-preference){ .pv,.pct,.m,.v{transition:color .25s} .folha[open]{animation:sobe .22s ease-out} @keyframes sobe{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}} }
 @media (min-width:520px){ .chance .pv{font-size:80px} .placar2 .pct{font-size:44px} h1{font-size:40px} }
 </style>
 </head>
@@ -118,7 +134,7 @@ details.detalhes h2:first-of-type{margin-top:18px}
 
 <div id="erro" class="erro" hidden></div>
 
-<h2>Chance de vitória</h2>
+<h2><span>Chance de vitória</span><button class="help" type="button" data-ajuda="chance" aria-label="Como ler a chance de vitória">?</button></h2>
 <div class="chance" aria-label="Chance de vitória">
   <div class="l"><div class="nome">Lula</div><div class="pv" id="pLula">–</div></div>
   <div class="f"><div class="nome">Flávio</div><div class="pv" id="pFlavio">–</div></div>
@@ -132,12 +148,12 @@ details.detalhes h2:first-of-type{margin-top:18px}
 </div>
 <div class="meta" id="pstline">—</div>
 
-<h2>A aposta de cada campanha · contra o 1º turno</h2>
+<h2><span>A aposta de cada campanha · contra o 1º turno</span><button class="help" type="button" data-ajuda="apostas" aria-label="Como ler as apostas">?</button></h2>
 <div class="lista apostas">
-  <div class="row"><div class="l1"><span class="uf">Abstenção · aposta do PT</span><span class="m" id="ap1v">–</span></div><div class="l2" id="ap1s">—</div><div class="l3" id="ap1t">—</div></div>
-  <div class="row"><div class="l1"><span class="uf">Abstenção · medo do PL</span><span class="m" id="ap2v">–</span></div><div class="l2" id="ap2s">—</div><div class="l3" id="ap2t">—</div></div>
-  <div class="row"><div class="l1"><span class="uf">Brancos e nulos</span><span class="m" id="ap3v">–</span></div><div class="l2" id="ap3s">—</div><div class="l3" id="ap3t">—</div></div>
-  <div class="row"><div class="l1"><span class="uf">Votos dos eliminados</span><span class="m" id="ap4v">–</span></div><div class="l2" id="ap4s">—</div><div class="l3" id="ap4t">—</div></div>
+  <div class="row"><div class="l1"><span class="uf">Abstenção · aposta do PT <button class="help" type="button" data-ajuda="pt" aria-label="Como ler a aposta do PT">?</button></span><span class="m" id="ap1v">–</span></div><div class="l2" id="ap1s">—</div><div class="l3" id="ap1t">—</div></div>
+  <div class="row"><div class="l1"><span class="uf">Abstenção · medo do PL <button class="help" type="button" data-ajuda="pl" aria-label="Como ler o medo do PL">?</button></span><span class="m" id="ap2v">–</span></div><div class="l2" id="ap2s">—</div><div class="l3" id="ap2t">—</div></div>
+  <div class="row"><div class="l1"><span class="uf">Brancos e nulos <button class="help" type="button" data-ajuda="nulos" aria-label="Como ler brancos e nulos">?</button></span><span class="m" id="ap3v">–</span></div><div class="l2" id="ap3s">—</div><div class="l3" id="ap3t">—</div></div>
+  <div class="row"><div class="l1"><span class="uf">Votos dos eliminados <button class="help" type="button" data-ajuda="eliminados" aria-label="Como ler os votos dos eliminados">?</button></span><span class="m" id="ap4v">–</span></div><div class="l2" id="ap4s">—</div><div class="l3" id="ap4t">—</div></div>
 </div>
 
 <div class="ctl">
@@ -149,7 +165,7 @@ details.detalhes h2:first-of-type{margin-top:18px}
 <details class="detalhes" id="detalhes">
 <summary>Como a conta é feita · régua, institutos, estados, curva e histórico</summary>
 
-<h2>Régua · como tende a terminar</h2>
+<h2><span>Régua · como tende a terminar</span><button class="help" type="button" data-ajuda="regua" aria-label="Como ler a régua">?</button></h2>
 <div class="hero" id="hero">
   <div class="k">margem final implícita · k = 1</div>
   <div class="v" id="imp">–</div>
@@ -162,46 +178,85 @@ details.detalhes h2:first-of-type{margin-top:18px}
 </div>
 <div class="meta" id="esperado" style="margin-top:10px">—</div>
 
-<h2>Institutos · última onda de cada um</h2>
+<h2><span>Institutos · última onda de cada um</span><button class="help" type="button" data-ajuda="institutos" aria-label="Como ler os institutos">?</button></h2>
 <div class="lista" id="inst"><div class="vazio">sem pesquisas carregadas</div></div>
 <div class="meta" id="instmeta" style="margin-top:8px">—</div>
 
-<h2>Estados · margem Lula − Flávio</h2>
+<h2><span>Estados · margem Lula − Flávio</span><button class="help" type="button" data-ajuda="estados" aria-label="Como ler os estados">?</button></h2>
 <div class="lista" id="ufs"><div class="vazio">aparece quando as seções do estado começarem a entrar</div></div>
-<div class="meta" style="margin-top:8px">Barra: margem atual. ▼ acima = 2º turno de 2022 · ▲ abaixo = 1º turno de 2026, só entre os dois.</div>
 
-<h2>Abstenção por estado · contra o 1º turno</h2>
+<h2><span>Abstenção por estado · contra o 1º turno</span><button class="help" type="button" data-ajuda="abstencao" aria-label="Como ler a abstenção por estado">?</button></h2>
 <div class="lista" id="abs"><div class="vazio">o TSE publica comparecimento junto com a totalização</div></div>
 
-<h2>Curva da noite</h2>
+<h2><span>Curva da noite</span><button class="help" type="button" data-ajuda="curva" aria-label="Como ler a curva da noite">?</button></h2>
 <div class="chart-box">
   <svg id="chart" viewBox="0 0 360 250" role="img" aria-label="Margem parcial Lula menos Flávio contra o percentual de seções totalizadas, com as curvas esperadas para final Lula mais dois, empate e Flávio mais dois"></svg>
-  <div class="leg"><i style="background:var(--accent)"></i>esta noite &nbsp; <i style="background:var(--muted);height:2px"></i>esperado se o final for Lula +2 (alto), empate (meio) ou Flávio +2 (baixo), com a ordem de chegada de 2022</div>
+  <div class="leg"><i style="background:var(--accent)"></i>esta noite &nbsp; <i style="background:var(--muted);height:2px"></i>esperado: Lula +2 · empate · Flávio +2</div>
   <div class="leg" id="tap">Toque no gráfico para ler um ponto.</div>
 </div>
 
-<h2>Leituras neste aparelho</h2>
+<h2><span>Leituras neste aparelho</span><button class="help" type="button" data-ajuda="leituras" aria-label="Como ler o histórico">?</button></h2>
 <div class="lista hist" id="hist"><div class="vazio">sem leituras ainda</div></div>
 </details>
 
-<details>
-  <summary>Como ler esta página</summary>
-  <p><b>Chance de vitória.</b> Antes da urna, vem das pesquisas: a última onda de cada instituto com campo recente, em votos válidos entre os dois, corrigida pela metade do erro que o mesmo instituto cometeu no 1º turno de 2026, com incerteza de ±3,3 pontos na margem, o tamanho do erro das pesquisas finais de 2º turno desde 2006. Durante a apuração entra a régua, com incerteza própria que encolhe conforme as seções chegam; a chance é a combinação das duas, cada uma pesada pela sua precisão. Aos 100% é 0 ou 100.</p>
-  <p><b>Placar.</b> Lula e Flávio em votos válidos, como o TSE proclama. A margem é Lula menos Flávio; negativa, Flávio está na frente. As primeiras seções vêm do Sul, do Sudeste e das capitais; o interior do Nordeste chega por último. Em 2022, Bolsonaro liderou até 66,8% das seções e Lula virou às 18h42.</p>
-  <p><b>Cores nas apostas.</b> Vermelho, o número favorece Lula; azul, favorece Flávio; sem cor, não mexe.</p>
-  <p><b>Aposta do PT.</b> A campanha de Lula foi atrás de quem faltou no 1º turno: entre ausentes, brancos e nulos, a Quaest de 14/10 mediu Lula 43 × Flávio 38. O número é a abstenção nacional e, embaixo, a do Nordeste, cada uma contra ela mesma no 1º turno. Caindo onde Lula é forte, a aposta funcionou. Os estados só entram na média com 30% ou mais das suas seções, porque antes disso o número reflete as seções que chegaram, não o estado.</p>
-  <p><b>Medo do PL.</b> Os responsáveis pelas pesquisas do PL temiam perder votos pela abstenção nos estados sem 2º turno de governador, onde a eleição não puxa o eleitor; o ato da Paulista de 18/10 foi resposta a isso. O número compara a abstenção nos estados sem disputa de governador e nos seis com disputa, cada grupo contra o 1º turno. Se subiu mais onde não há governador, o medo tinha razão.</p>
-  <p><b>Brancos e nulos.</b> Contra o 1º turno e 2022. Sobe se o eleitor dos eliminados preferiu anular; o PCO orientou nulo.</p>
-  <p><b>Votos dos eliminados.</b> Cury, Caiado, Renan e Zema tinham 7,8% dos válidos. A Folha fez a conta: Lula precisava de cerca de 62% desses votos. O número é quanto Lula ganhou de fatia dos válidos desde o 1º turno, dividido pelo que os eliminados tinham, e só vale perto do fim, porque antes a ordem de chegada das seções distorce; a abstenção e os nulos também entram nessa conta, por isso é aproximação.</p>
-  <p><b>Régua.</b> A margem final que a parcial sugere, descontada a ordem de chegada das seções medida no 2º turno de 2022: a margem de Lula ficou 15 pontos abaixo da final aos 2% das seções, 4,9 aos 20%, 2,4 aos 50% e 0,7 aos 90%. O k diz quanto dessa geografia vale em 2026: 1 se o país se moveu por igual, como no 1º turno; 0,5 se a diferença entre regiões se achatou pela metade. Entre −1 e +1 o método não separa os dois.</p>
-  <p><b>Institutos.</b> A última onda de cada instituto, a margem bruta e a corrigida pelo erro do 1º turno. Durante a apuração, a distância para a implícita da régua; no fim, o erro contra a urna.</p>
-  <p><b>Estados.</b> SP, MG, RJ, BA e PE com a margem atual e a fatia das seções do estado. O triângulo de cima marca o 2º turno de 2022; o de baixo, o 1º turno de 2026 contado só entre os dois.</p>
-  <p><b>Curva da noite.</b> A leitura desta noite sobre três curvas de referência: como a margem parcial deveria caminhar se o final fosse Lula +2, empate ou Flávio +2, com a ordem de chegada de 2022.</p>
+<template id="ajuda-chance" data-titulo="Chance de vitória">
+  <p>Antes da urna, a chance vem das pesquisas: a última onda de cada instituto com campo recente, em votos válidos entre os dois, corrigida pela metade do erro que o mesmo instituto cometeu no 1º turno de 2026, com incerteza de ±3,3 pontos na margem, o tamanho do erro das pesquisas finais de 2º turno desde 2006.</p>
+  <p>Durante a apuração entra a régua, com incerteza própria que encolhe conforme as seções chegam. A chance é a combinação das duas, cada uma pesada pela sua precisão. A linha abaixo da barra diz quanto a apuração já pesa. Aos 100% a chance é 0 ou 100.</p>
+  <p class="mini">Placar</p>
+  <p>Lula e Flávio em votos válidos, como o TSE proclama. A margem é Lula menos Flávio; negativa, Flávio está na frente. As primeiras seções vêm do Sul, do Sudeste e das capitais; o interior do Nordeste chega por último. Em 2022, Bolsonaro liderou até 66,8% das seções e Lula virou às 18h42.</p>
+</template>
+<template id="ajuda-apostas" data-titulo="A aposta de cada campanha">
+  <p>Cada campanha apostou em mover um pedaço do eleitorado entre o 1º e o 2º turno. Os quatro números mostram, contra o 1º turno, se o pedaço se moveu.</p>
+  <p><b>Cores.</b> Vermelho, o número favorece Lula; azul, favorece Flávio; sem cor, não mexe.</p>
+  <p><b>Quando aparece.</b> Os números nacionais, a partir de 15% das seções. Um estado só entra nas médias com 30% ou mais das suas seções, porque antes disso o número reflete as seções que chegaram, não o estado. Os votos dos eliminados, a partir de 90%.</p>
+</template>
+<template id="ajuda-pt" data-titulo="Abstenção · aposta do PT">
+  <p>A campanha de Lula foi atrás de quem faltou no 1º turno. A Quaest de 14/10 mediu que, entre ausentes, brancos e nulos do 1º turno, Lula tem 43 × 38. Eram 33 milhões de pessoas.</p>
+  <p>O número é a abstenção nacional e, embaixo, a do Nordeste, cada uma contra ela mesma no 1º turno e em 2022. Caindo onde Lula é forte, a aposta funcionou. A média do Nordeste é pesada pelos votos válidos de cada estado no 1º turno.</p>
+</template>
+<template id="ajuda-pl" data-titulo="Abstenção · medo do PL">
+  <p>Os responsáveis pelas pesquisas do PL temiam perder votos pela abstenção nos estados sem 2º turno de governador, onde a eleição não puxa o eleitor; o ato da Paulista de 18/10 foi resposta a isso (Bela Megale, O Globo, 13/10).</p>
+  <p>O número compara a abstenção nos 21 estados sem disputa de governador e nos 6 com disputa (AC, AM, DF, ES, RN e TO, pela configuração oficial do TSE), cada grupo contra o 1º turno. Se subiu mais onde não há governador, o medo tinha razão.</p>
+</template>
+<template id="ajuda-nulos" data-titulo="Brancos e nulos">
+  <p>Contra o 1º turno e 2022. Sobe se o eleitor dos eliminados preferiu anular a escolher; o PCO orientou voto nulo.</p>
+</template>
+<template id="ajuda-eliminados" data-titulo="Votos dos eliminados">
+  <p>Cury, Caiado, Renan e Zema tinham 7,8% dos votos válidos no 1º turno. A Folha fez a conta: Lula precisava de cerca de 62% desses votos para vencer.</p>
+  <p>O número é quanto Lula ganhou de fatia dos válidos desde o 1º turno, dividido pelo que os eliminados tinham. Só vale perto do fim, porque antes a ordem de chegada das seções distorce. Abstenção e nulos também entram nessa diferença, por isso é aproximação.</p>
+</template>
+<template id="ajuda-regua" data-titulo="Régua">
+  <p>A margem final que a parcial sugere, descontada a ordem de chegada das seções medida no 2º turno de 2022: a margem de Lula ficou 15 pontos abaixo da final aos 2% das seções, 4,9 aos 20%, 2,4 aos 50% e 0,7 aos 90%.</p>
+  <p>O k diz quanto dessa geografia vale em 2026: 1 se o país se moveu por igual, como no 1º turno; 0,5 se a diferença entre regiões se achatou pela metade. A leitura em texto segue regras fixadas antes da apuração e só aparece a partir de 15% das seções. Entre −1 e +1 o método não separa os dois.</p>
+</template>
+<template id="ajuda-institutos" data-titulo="Institutos">
+  <p>A última onda de cada instituto, a margem bruta entre os dois e a corrigida pelo erro que o mesmo instituto cometeu no 1º turno. Antes da urna, ordem do campo mais recente. Durante a apuração, cada um aparece com a distância para a implícita da régua, do mais perto ao mais longe. No fim, com o erro contra a urna.</p>
+</template>
+<template id="ajuda-estados" data-titulo="Estados">
+  <p>SP, MG, RJ, BA e PE com a margem atual e a fatia das seções do estado já contadas. Na barra, o triângulo de cima marca o 2º turno de 2022; o de baixo, o 1º turno de 2026 contado só entre Lula e Flávio, sem os terceiros. Barra perto do de cima, o estado repete 2022; perto do de baixo, repete o 1º turno.</p>
+</template>
+<template id="ajuda-abstencao" data-titulo="Abstenção por estado">
+  <p>Cada estado contra ele mesmo no 1º turno e em 2022, com a fatia das seções já contadas. Ordenado pela variação contra o 1º turno: os que mais caíram em cima, os que mais subiram embaixo. Só estados com 30% ou mais das suas seções.</p>
+</template>
+<template id="ajuda-curva" data-titulo="Curva da noite">
+  <p>A leitura desta noite, em verde, sobre três curvas de referência: como a margem parcial deveria caminhar se o final fosse Lula +2, empate ou Flávio +2, com a ordem de chegada de 2022. Linha verde acima da curva do empate, Lula tende; abaixo, Flávio. A linha pontilhada em 67% marca onde Lula virou em 2022.</p>
+  <p>Toque no gráfico para ler um ponto.</p>
+</template>
+<template id="ajuda-leituras" data-titulo="Leituras neste aparelho">
+  <p>Cada atualização fica guardada no navegador, com a margem, a implícita e a chance da hora. Nada sai do aparelho; "Limpar histórico" zera.</p>
+</template>
+<template id="ajuda-sobre" data-titulo="Sobre esta página">
+  <p>Lê os arquivos oficiais do Divulga/TSE (eleição 6258) direto do seu navegador a cada 2 minutos. Referências de 2022 e do 1º turno vêm dos dados abertos do TSE. Página independente, sem vínculo com o TSE, partidos ou campanhas. Em caso de dúvida, vale o <a href="https://resultados.tse.jus.br/" target="_blank" rel="noopener">Divulga oficial</a>.</p>
   <p><b>Ensaio.</b> <a href="?replay=2022">?replay=2022</a> percorre a apuração real do 2º turno de 2022 ponto a ponto, para aprender a ler a página antes de domingo; a chance ali vem só da régua, sem pesquisas, e Bolsonaro aparece nas casas de Flávio.</p>
-  <p><b>Leituras neste aparelho.</b> Cada atualização fica guardada no navegador. Nada sai do aparelho; "Limpar histórico" zera.</p>
-</details>
+  <p><b>Aviso.</b> Se o arquivo do TSE ficar 10 minutos sem mudar durante a apuração, o selo do topo avisa "TSE parado".</p>
+</template>
 
-<div class="nota">Fonte: arquivos oficiais do Divulga/TSE (eleição 6258), lidos direto do seu navegador a cada 2 minutos. Referências de 2022 e do 1º turno: <a href="https://dadosabertos.tse.jus.br/" target="_blank" rel="noopener">dados abertos do TSE</a>. Página independente, sem vínculo com o TSE, partidos ou campanhas. Em caso de dúvida, vale o <a href="https://resultados.tse.jus.br/" target="_blank" rel="noopener">Divulga oficial</a>.</div>
+<dialog id="folha" class="folha" aria-labelledby="folha-titulo">
+  <div class="folha-top"><h3 id="folha-titulo">—</h3><button id="folha-fechar" type="button">Fechar</button></div>
+  <div class="folha-corpo" id="folha-corpo"></div>
+</dialog>
+
+<div class="nota">Dados oficiais do Divulga/TSE · página independente · <button class="link" type="button" data-ajuda="sobre">sobre esta página</button></div>
 </div>
 
 <script src="referencia.js"></script>
@@ -235,21 +290,21 @@ function renderApostas(t,sh,pst,ab,ufj,fim){
   if(cedo||!t||t.pa==null){ $("ap1v").textContent="–"; $("ap1v").className="m off"; $("ap1s").textContent=`1º turno ${fmt(BR26.abst,1)}% · 2022 ${fmt(BR22.abst,1)}% · aparece a partir de 15% das seções`; }
   else { const d=t.pa-BR26.abst; $("ap1v").textContent=fmt(t.pa,1)+"%"; $("ap1v").className="m "+(d<-0.3?"pos":(d>0.3?"neg":"")); $("ap1s").textContent=`1º turno ${fmt(BR26.abst,1)}% (${sgn(d,1)}) · 2022 ${fmt(BR22.abst,1)}%`; }
   $("ap1t").textContent=ne?`Nordeste: ${fmt(ne.agora,1)}% · 1º turno ${fmt(ne.t1,1)}% (${sgn(dlt(ne),1)}) · ${ne.n} de 9 estados com 30%+ das seções · ${dlt(ne)<-0.3?"caiu onde Lula é forte: a aposta funcionou":(dlt(ne)>0.3?"subiu onde Lula é forte: a aposta falhou":"igual ao 1º turno")}`
-    :"Nordeste: entra quando os estados passarem de 30% das suas seções. Lula foi atrás de quem faltou no 1º turno (Quaest 14/10: entre ausentes e nulos, Lula 43 × 38).";
+    :"Nordeste: entra quando os estados passarem de 30% das suas seções.";
   // 2. abstenção · medo do PL
   if(sem){ const d=dlt(sem); $("ap2v").textContent=fmt(sem.agora,1)+"%"; $("ap2v").className="m "+(d>0.3?"pos":(d<-0.3?"neg":"")); $("ap2s").textContent=`${nSem} estados sem governador em disputa: 1º turno ${fmt(sem.t1,1)}% (${sgn(d,1)}) · ${sem.n} com 30%+ das seções`; }
   else { $("ap2v").textContent="–"; $("ap2v").className="m off"; $("ap2s").textContent=`${nSem} estados sem governador em disputa · entra com 30%+ das seções de cada um`; }
   if(sem&&com){ const dd=dlt(sem)-dlt(com); $("ap2t").textContent=`nos ${nCom} com governador (${[...GOV].map(u=>u.toUpperCase()).join(", ")}): ${fmt(com.agora,1)}% · 1º turno ${fmt(com.t1,1)}% (${sgn(dlt(com),1)}) · ${dd>0.5?"abstenção subiu mais onde não há governador: o medo do PL tinha razão":(dd<-0.5?"subiu menos onde não há governador: o medo não se confirmou":"sem diferença entre os grupos")}`; }
-  else $("ap2t").textContent=`O PL temia que seu eleitor ficasse em casa onde não há 2º turno de governador (Bela Megale, 13/10). Com governador: ${[...GOV].map(u=>u.toUpperCase()).join(", ")||"–"}.`;
+  else $("ap2t").textContent=`Com governador em disputa: ${[...GOV].map(u=>u.toUpperCase()).join(", ")||"–"}.`;
   // 3. brancos e nulos
   const bn=t&&t.tv&&t.vb!=null&&t.vn!=null?100*(t.vb+t.vn)/t.tv:null;
-  if(cedo||bn==null){ $("ap3v").textContent="–"; $("ap3v").className="m off"; $("ap3s").textContent=`1º turno ${fmt(BR26.bn,1)}% · 2022 ${fmt(BR22.bn,1)}% · aparece a partir de 15% das seções`; $("ap3t").textContent="Sobe se o eleitor dos eliminados preferiu anular."; }
+  if(cedo||bn==null){ $("ap3v").textContent="–"; $("ap3v").className="m off"; $("ap3s").textContent=`1º turno ${fmt(BR26.bn,1)}% · 2022 ${fmt(BR22.bn,1)}% · aparece a partir de 15% das seções`; $("ap3t").textContent=""; }
   else { const d=bn-BR26.bn; $("ap3v").textContent=fmt(bn,1)+"%"; $("ap3v").className="m "+(d>0.5?"neg":""); $("ap3s").textContent=`1º turno ${fmt(BR26.bn,1)}% (${sgn(d,1)}) · 2022 ${fmt(BR22.bn,1)}%`; $("ap3t").textContent=d>0.5?"Mais nulos que no 1º turno: parte dos eleitores dos eliminados não escolheu.":(d<-0.5?"Menos nulos que no 1º turno.":"Igual ao 1º turno."); }
   // 4. votos dos eliminados
-  if(!sh||pst==null||pst<90){ $("ap4v").textContent="–"; $("ap4v").className="m off"; $("ap4s").textContent=`Lula precisava de ~${META_ELIMINADOS}% dos votos dos eliminados (Folha) · eles tinham ${fmt(B1.terceiros,1)}% dos válidos`; $("ap4t").textContent="Fecha no fim da noite: antes de 90% das seções a ordem de chegada distorce a conta."; }
+  if(!sh||pst==null||pst<90){ $("ap4v").textContent="–"; $("ap4v").className="m off"; $("ap4s").textContent=`Lula precisava de ~${META_ELIMINADOS}% dos votos dos eliminados · eles tinham ${fmt(B1.terceiros,1)}% dos válidos`; $("ap4t").textContent="Fecha no fim da noite, a partir de 90% das seções."; }
   else { const fl=100*(sh.L-B1.lula)/B1.terceiros, ff=100*(sh.F-B1.flavio)/B1.terceiros; $("ap4v").textContent=fmt(fl,0)+"%"; $("ap4v").className="m "+(fl>=META_ELIMINADOS?"pos":"neg");
     $("ap4s").textContent=`fatia dos votos dos eliminados que foi a Lula${fim?"":" (parcial)"} · Flávio ${fmt(ff,0)}% · Lula precisava de ~${META_ELIMINADOS}% (Folha)`;
-    $("ap4t").textContent=`Lula ${sgn(sh.L-B1.lula,1)} e Flávio ${sgn(sh.F-B1.flavio,1)} pontos de válidos desde o 1º turno; os eliminados tinham ${fmt(B1.terceiros,1)}. ${fl>=META_ELIMINADOS?"Lula fez a conta.":"Lula ficou abaixo do que precisava."} Abstenção e nulos também entram nessa diferença.`; }
+    $("ap4t").textContent=`Lula ${sgn(sh.L-B1.lula,1)} e Flávio ${sgn(sh.F-B1.flavio,1)} pontos de válidos desde o 1º turno; os eliminados tinham ${fmt(B1.terceiros,1)}. ${fl>=META_ELIMINADOS?"Lula fez a conta.":"Lula ficou abaixo do que precisava."}`; }
 }
 const PRIOR_PLANO={mu:0,sigma0:12,p_flavio:50,p_flavio_sem_correcao:50,mu_bruta:0,n:0,corte:"",ultimas:[]};   // ensaio: chance só pela régua
 function Phi(z){ const t=1/(1+0.2316419*Math.abs(z)), d=0.3989423*Math.exp(-z*z/2); const p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); return z>0?1-p:p; }
@@ -273,7 +328,7 @@ function renderInst(imp,fim){
   $("inst").innerHTML=rows.map(r=>`<div class="row"><div class="l1"><span class="uf" style="font-size:18px">${r.inst}</span><span class="m ${cls(r.bruta)}" style="font-size:26px">${sgn(r.bruta,1)}</span></div>
     <div class="l2">Lula ${fmt(r.lula,1)} × Flávio ${fmt(r.flavio,1)} · campo até ${r.fim.slice(8,10)}/${r.fim.slice(5,7)} · ${r.modo==="pres"?"presencial":(r.modo==="tel"?"telefone":(r.modo==="ivr"?"URA":"online"))} · n ${fmt(r.n,0)}</div>
     <div class="l3">erro no 1º turno ${sgn(r.erro_1t,1)} · corrigida ${sgn(r.corrigida,1)}${r.dist==null?"":(fim?` · <b>erro contra a urna ${sgn(r.dist,1)}</b>`:` · <b>${fmt(Math.abs(r.dist),1)} da implícita</b>`)}</div></div>`).join("");
-  $("instmeta").textContent=imp==null?"Margem Lula − Flávio em votos válidos entre os dois. Ordem: campo mais recente primeiro.":(fim?"Erro = urna − pesquisa. Ordem: do menor ao maior.":"Distância = implícita da régua − margem da pesquisa. Ordem: do mais perto ao mais longe.");
+  $("instmeta").textContent=imp==null?"campo mais recente primeiro":(fim?"erro contra a urna, do menor ao maior":"distância para a implícita, do mais perto ao mais longe");
 }
 const $=id=>document.getElementById(id);
 const fmt=(x,d=1)=>x==null||isNaN(x)?"–":x.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -361,7 +416,7 @@ function render(br,ab,ufj){
   for(const x of absl){ x.a26=(UF26[x.uf]||{}).abst; x.a22=(UF22[x.uf]||{}).abst; x.d=x.a26!=null?x.pa-x.a26:null; }
   absl.sort((a,b)=>(a.d??99)-(b.d??99));
   const mostrar=absl.filter(x=>x.p>=30);
-  $("abs").innerHTML=mostrar.length?mostrar.slice(0,5).concat(mostrar.length>10?mostrar.slice(-5):mostrar.slice(5,10)).map(x=>`<div class="row"><div class="l1"><span class="uf">${x.uf.toUpperCase()}</span><span class="m ${x.d==null?"":(x.d<-0.05?"pos":(x.d>0.05?"neg":""))}" style="font-size:24px">${fmt(x.pa,1)}%</span></div><div class="l2">1º turno ${fmt(x.a26,1)} (${sgn(x.d,1)}) · 2022 ${fmt(x.a22,1)} · ${fmt(x.p,0)}% das seções</div></div>`).join("")+`<div class="meta">Ordenado pela variação contra o 1º turno: os que mais caíram em cima, os que mais subiram embaixo. Só estados com 30%+ das suas seções.</div>`:`<div class="vazio">aparece quando os estados passarem de 30% das suas seções</div>`;
+  $("abs").innerHTML=mostrar.length?mostrar.slice(0,5).concat(mostrar.length>10?mostrar.slice(-5):mostrar.slice(5,10)).map(x=>`<div class="row"><div class="l1"><span class="uf">${x.uf.toUpperCase()}</span><span class="m ${x.d==null?"":(x.d<-0.05?"pos":(x.d>0.05?"neg":""))}" style="font-size:24px">${fmt(x.pa,1)}%</span></div><div class="l2">1º turno ${fmt(x.a26,1)} (${sgn(x.d,1)}) · 2022 ${fmt(x.a22,1)} · ${fmt(x.p,0)}% das seções</div></div>`).join("")+`<div class="meta">mais caíram em cima, mais subiram embaixo</div>`:`<div class="vazio">aparece quando os estados passarem de 30% das suas seções</div>`;
   const key=(br.dg||"")+" "+(br.hg||"");
   if(!hist.length||hist[hist.length-1].key!==key){ hist.push({key,t:(br.hg||"").slice(0,5),pst,L:sh.L,F:sh.F,m,i:imp,pF:post?post.pF:null}); saveHist(); }
   renderChart();
@@ -424,6 +479,12 @@ function replay(q){
   $("ufs").innerHTML=`<div class="vazio">o ensaio não tem dados por estado</div>`;
   frame(); tocar();
 }
+/* painel de ajuda: abre por cima da tela com o template do bloco */
+const folha=$("folha");
+function abrirAjuda(id){ const t=document.getElementById("ajuda-"+id); if(!t||!folha) return; $("folha-titulo").textContent=t.dataset.titulo||""; $("folha-corpo").innerHTML=t.innerHTML; if(typeof folha.showModal==="function"){ folha.showModal(); } else { folha.setAttribute("open",""); } $("folha-corpo").scrollTop=0; }
+function fecharAjuda(){ if(!folha) return; if(folha.open&&typeof folha.close==="function") folha.close(); else folha.removeAttribute("open"); }
+document.addEventListener("click",ev=>{ const b=ev.target.closest("[data-ajuda]"); if(b){ ev.preventDefault(); abrirAjuda(b.dataset.ajuda); } });
+if(folha){ $("folha-fechar").addEventListener("click",fecharAjuda); folha.addEventListener("click",ev=>{ if(ev.target===folha) fecharAjuda(); }); }
 const q=new URLSearchParams(location.search);
 if(q.has("replay")){ replay(q); } else if(q.has("demo")){ demo(q); } else { renderChart(); atualizar(); }
 })();

@@ -4,6 +4,8 @@ Página estática que lê os arquivos oficiais do Divulga/TSE direto do navegado
 
 1. **Chance de vitória** e o placar Lula × Flávio em votos válidos. Antes da urna, a chance vem das pesquisas corrigidas pelo erro do 1º turno; durante a apuração, combinada com a régua.
 2. **A aposta de cada campanha, contra o 1º turno:** abstenção nacional e no Nordeste (o eleitor que faltou no 1º turno, que a campanha de Lula foi buscar); abstenção nos 21 estados sem 2º turno de governador contra os 6 com (o medo do PL, de que seu eleitor ficasse em casa); brancos e nulos; e a fatia dos votos dos eliminados que foi a Lula, contra os ~62% de que ele precisava (Folha), que só fecha no fim da noite.
+Cada bloco tem um botão "?" que abre um painel por cima da tela com a explicação daquele bloco; na tela ficam só dado e veredito. O rodapé abre "sobre esta página" do mesmo jeito.
+
 3. **Como a conta é feita**, recolhido: a **régua** (a margem final que a parcial sugere, descontada a ordem de chegada das seções medida no 2º turno de 2022), os **institutos** com a distância para a implícita, SP, MG, RJ, BA e PE contra 2022 e o 1º turno, a abstenção por estado, a curva da noite e o histórico de leituras.
 
 Nada sai do navegador: o histórico de leituras fica em `localStorage`. `?demo=1` mostra a página cheia com dados fictícios (`&pst=20` muda a fatia, `&final=-1` o resultado hipotético). `?replay=2022` é o **ensaio**: percorre a apuração real do 2º turno de 2022 ponto a ponto (`&ms=200` acelera), com a chance vindo só da régua. Se o arquivo do TSE ficar 10 minutos sem mudar durante a apuração, o selo do topo avisa "TSE parado".
