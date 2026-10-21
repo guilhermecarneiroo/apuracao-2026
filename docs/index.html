@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <title>Apuração 2026 · 2º turno</title>
 <meta name="description" content="Leitura ao vivo da apuração do 2º turno de 2026 pelos arquivos oficiais do TSE, descontada a ordem de chegada das seções medida em 2022.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&family=Press+Start+2P&display=swap">
 <style>
 /* Boletim de urna encontra placar de TV: uma coluna, números grandes, rótulos em mono, filetes de 1px, sem cartões. Ver DESIGN.md. */
 :root{
@@ -48,8 +48,13 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 #marco{margin-top:10px}
 /* chance: o placar de TV */
 .chance{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-items:end}
-.chance .nome{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
-.chance .pv{font-size:64px;font-weight:800;line-height:1;letter-spacing:-.03em;font-variation-settings:"wdth" 100;margin-top:4px}
+.chance .nome{font-size:11px;font-family:"Press Start 2P",var(--mono);text-transform:uppercase;letter-spacing:0;color:var(--muted);line-height:1.4}
+.chance .boneco{width:100px;height:140px;display:block;margin-top:10px}
+.chance .f .boneco{margin-left:auto}
+.chance .pv{font-size:32px;font-family:"Press Start 2P",var(--font);font-weight:400;line-height:1.1;letter-spacing:0;margin-top:12px}
+:root{--sp-o:#161a18;--sp-j:#2b3550;--sp-w:#f4f4f0;--sp-sash1:#2a9d5c;--sp-sash2:#f5c400;--sp-off:#c9cfcb}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --sp-o:#07090a;--sp-j:#46557a;--sp-w:#e6e6e0;--sp-off:#2e3734 } }
+:root[data-theme="dark"]{ --sp-o:#07090a;--sp-j:#46557a;--sp-w:#e6e6e0;--sp-off:#2e3734 }
 .chance .l .pv{color:var(--lula)} .chance .f{text-align:right} .chance .f .pv{color:var(--flavio)}
 .chance .barra{grid-column:1/-1;margin-top:12px}
 .chance .meta{grid-column:1/-1;margin-top:8px}
@@ -133,7 +138,7 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .folha-corpo b{font-weight:600}
 .folha-corpo .mini{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:16px 0 6px}
 @media (prefers-reduced-motion: no-preference){ .pv,.pct,.m,.v{transition:color .25s} .folha[open]{animation:sobe .22s ease-out} @keyframes sobe{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}} }
-@media (min-width:520px){ .chance .pv{font-size:80px} .placar2 .pct{font-size:44px} h1{font-size:40px} }
+@media (min-width:520px){ .chance .pv{font-size:40px} .chance .boneco{width:120px;height:168px} .placar2 .pct{font-size:44px} h1{font-size:40px} }
 </style>
 </head>
 <body>
@@ -150,8 +155,8 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 
 <h2><span>Chance de vitória</span><button class="help" type="button" data-ajuda="chance" aria-label="Como ler a chance de vitória">?</button></h2>
 <div class="chance" aria-label="Chance de vitória" aria-live="polite">
-  <div class="l"><div class="nome">Lula</div><div class="pv" id="pLula">–</div></div>
-  <div class="f"><div class="nome">Flávio</div><div class="pv" id="pFlavio">–</div></div>
+  <div class="l"><div class="nome">Lula</div><svg class="boneco" id="spL" viewBox="0 0 20 28" aria-hidden="true" shape-rendering="crispEdges"></svg><div class="pv" id="pLula">–</div></div>
+  <div class="f"><div class="nome">Flávio</div><svg class="boneco" id="spF" viewBox="0 0 20 28" aria-hidden="true" shape-rendering="crispEdges"></svg><div class="pv" id="pFlavio">–</div></div>
   <div class="barra" id="pbar" aria-hidden="true"><div class="l" style="width:50%"></div><div class="f" style="width:50%"></div></div>
   <div class="veredito" id="veredito">—</div>
   <div class="meta" id="pmeta">—</div>
@@ -344,12 +349,28 @@ function renderFaixa(mu,sd,pst){
   $("fxdot").style.left=pos(mu)+"%"; $("fxdot").className="fx-dot on"; $("fxdot").style.background=mu>0.05?"var(--lula)":(mu<-0.05?"var(--flavio)":"var(--fg)");
   $("faixav").textContent=`${mu>0.05?"Lula":(mu<-0.05?"Flávio":"empate")} ${fmt(Math.abs(mu),1)} ± ${fmt(sd,1)}`; $("faixav").className="fv "+cls(mu);
 }
+/* bonecos de 16 bits: grade 20×28, cada letra é uma cor; a faixa presidencial enche com a chance */
+const SP_HEAD_L=["hhhhhhhhhh","hhhhhhhhhh","hhsssssshh","hssssssssh","hsessssesh","ssssssssss","ssssssssss","sbbmmmmbbs","bbbbbbbbbb","bbbbbbbbbb","sbbbbbbbbs"];
+const SP_HEAD_F=["hhhhhhhhhh","hhhhhhhhhh","hhsssssshh","hssssssssh","hsessssesh","ssssssssss","ssssssssss","sssmmmmsss","ssssssssss","ssssssssss","ssssssssss"];
+function spriteRows(head){ const r=["....................",".....oooooooooo....."]; head.forEach((h,i)=>r.push(i===0?"....oo"+h.slice(1,9)+"oo....":"....o"+h+"o....")); r.push(".....oooooooooo.....",".......osssso.......",".......osssso.......",".ojjjjjjwsswjjjjjjo.",".ojjjjjwwttwwjjjjjo."); for(let i=0;i<9;i++) r.push(".ojjjjjjwttwjjjjjjo."); r.push(".oooooooooooooooooo."); return r; }
+const SP_PAL={L:{h:"#dcdcd8",b:"#c3c3bf",s:"#b97a52",e:"#1a1a1a",m:"#7a4034",t:"var(--lula)"},F:{h:"#3a2a20",s:"#e5b592",e:"#1a1a1a",m:"#b06a50",t:"var(--flavio)"}};
+function buildSprite(id,quem,mirror){
+  const svg=$(id); if(!svg) return [];
+  const rows=spriteRows(quem==="L"?SP_HEAD_L:SP_HEAD_F), pal=SP_PAL[quem]; let out="";
+  const X=x=>mirror?19-x:x;
+  rows.forEach((row,y)=>{ for(let x=0;x<20;x++){ const c=row[x]; if(c===".") continue; const f=c==="o"?"var(--sp-o)":(c==="j"?"var(--sp-j)":(c==="w"?"var(--sp-w)":pal[c])); out+=`<rect x="${X(x)}" y="${y}" width="1" height="1" fill="${f}"/>`; } });
+  const cells=[]; for(let y=16;y<=27;y++){ const x0=2+Math.round((y-16)*13/11); for(let k=0;k<3;k++){ cells.push({x:X(x0+k),y,k}); } }
+  out+=cells.map((c,i)=>`<rect class="sash" data-i="${i}" x="${c.x}" y="${c.y}" width="1" height="1" fill="var(--sp-off)"/>`).join("");
+  svg.innerHTML=out; return Array.from(svg.querySelectorAll(".sash")).map((el,i)=>({el,k:cells[i].k}));
+}
+let SASH_L=[], SASH_F=[];   // montados antes do primeiro render, depois que $ existe
+function setSash(cells,pct){ const n=Math.round(cells.length*Math.max(0,Math.min(100,pct??0))/100); cells.forEach((c,i)=>{ c.el.setAttribute("fill",i<n?(c.k===1?"var(--sp-sash2)":"var(--sp-sash1)"):"var(--sp-off)"); }); }
 function renderChance(post){
   if(!PRIOR){ $("pmeta").textContent="sem pesquisas carregadas"; return; }
-  if(REPLAY){ const pF=post?post.pF:50, pL=100-pF; $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
+  if(REPLAY){ const pF=post?post.pF:50, pL=100-pF; $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%"; setSash(SASH_L,pL); setSash(SASH_F,pF);
     $("pmeta").textContent=post?`ensaio: chance só pela régua, sem pesquisas (incerteza da régua ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua, sem pesquisas"; if(post) renderFaixa(post.mu,post.sd); return; }
   const pF=post?post.pF:PRIOR.p_flavio, pL=100-pF;
-  $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%";
+  $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; setSash(SASH_L,pL); setSash(SASH_F,pF);
   const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
   $("pmeta").textContent=post?`antes da urna: Flávio ${fmt(PRIOR.p_flavio,0)}% · a apuração já pesa ${fmt(post.peso,0)}%`
     :`pelas pesquisas · ${PRIOR.n} institutos`;
@@ -523,6 +544,7 @@ function abrirAjuda(id){ const t=document.getElementById("ajuda-"+id); if(!t||!f
 function fecharAjuda(){ if(!folha) return; if(folha.open&&typeof folha.close==="function") folha.close(); else folha.removeAttribute("open"); }
 document.addEventListener("click",ev=>{ const b=ev.target.closest("[data-ajuda]"); if(b){ ev.preventDefault(); abrirAjuda(b.dataset.ajuda); } });
 if(folha){ $("folha-fechar").addEventListener("click",fecharAjuda); folha.addEventListener("click",ev=>{ if(ev.target===folha) fecharAjuda(); }); }
+SASH_L=buildSprite("spL","L",false); SASH_F=buildSprite("spF","F",true);
 const q=new URLSearchParams(location.search);
 if(q.has("replay")){ replay(q); } else if(q.has("demo")){ demo(q); } else { renderChart(); atualizar(); }
 })();

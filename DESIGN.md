@@ -33,6 +33,7 @@ Paleta de gráfico (lula, flávio, acento) validada com o validador da skill de 
 - **Faixa de margem**: eixo de −8 a +8, banda cinza = ±1 desvio, ponto na cor de quem leva.
 - **Linha de lista**: filete superior, título à esquerda, número à direita, duas linhas de apoio.
 - **Painel de ajuda**: `<dialog>` que sobe do rodapé; botão "?" redondo em mono.
+- **Bonecos de 16 bits**: Lula e Flávio em grade de 20×28 pixels (SVG de retângulos, `shape-rendering: crispEdges`), com a faixa presidencial verde e amarela no peito que enche do ombro ao quadril conforme a chance. Os percentuais e os nomes nesse bloco usam Press Start 2P; é o único lugar da página com fonte de videogame. Cores dos bonecos são fixas, exceto contorno, paletó e faixa apagada, que seguem o tema.
 
 ## Regras
 
