@@ -38,9 +38,10 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 .faixa{margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
 .faixa-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .faixa .k{font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.faixa .fv{font-size:22px;font-weight:800;letter-spacing:-.02em;font-variation-settings:"wdth" 92;white-space:nowrap}
+.faixa .fv{font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.3;margin-top:8px;text-wrap:balance}
 .faixa-eixo{position:relative;height:14px;margin-top:12px;background:var(--track)}
 .fx-band{position:absolute;top:0;height:100%;background:var(--muted);opacity:.35;left:50%;width:0}
+.fx-band.lula{background:var(--lula);opacity:.3} .fx-band.flavio{background:var(--flavio);opacity:.3}
 .fx-zero{position:absolute;left:50%;top:-4px;width:2px;height:22px;background:var(--fg);transform:translateX(-1px)}
 .fx-dot{position:absolute;top:50%;left:50%;width:14px;height:14px;border-radius:50%;background:var(--fg);transform:translate(-50%,-50%);border:2px solid var(--bg);display:none}
 .fx-dot.on{display:block}
@@ -164,9 +165,10 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
   <div class="meta" id="pmeta">—</div>
 </div>
 <div class="faixa" aria-label="Margem final esperada">
-  <div class="faixa-top"><span class="k">margem esperada <button class="help" type="button" data-ajuda="margem" aria-label="Como ler a margem final esperada">?</button></span><span class="fv" id="faixav">–</span></div>
+  <div class="faixa-top"><span class="k">margem esperada <button class="help" type="button" data-ajuda="margem" aria-label="Como ler a margem final esperada">?</button></span></div>
+  <div class="fv" id="faixav">–</div>
   <div class="faixa-eixo" id="faixa"><div class="fx-band" id="fxband"></div><div class="fx-zero"></div><div class="fx-dot" id="fxdot"></div></div>
-  <div class="faixa-leg"><span>Lula +8</span><span>empate</span><span>Flávio +8</span></div>
+  <div class="faixa-leg"><span>◀ Lula</span><span>empate</span><span>Flávio ▶</span></div>
   <div class="meta" id="marco">—</div>
 </div>
 <div class="placar2" aria-label="Placar">
@@ -274,8 +276,9 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 <template id="ajuda-leituras" data-titulo="Leituras neste aparelho">
   <p>Cada atualização fica guardada no navegador, com a margem, a implícita e a chance da hora. Nada sai do aparelho; "Limpar histórico" zera.</p>
 </template>
-<template id="ajuda-margem" data-titulo="Margem final esperada">
-  <p>A margem Lula menos Flávio que a página espera no fim da noite, com a incerteza. Antes da urna, vem das pesquisas: média das últimas ondas corrigida pelo erro do 1º turno, ±3,3 pontos. Durante a apuração, é a combinação das pesquisas com a implícita da régua; a faixa cinza é ±1 desvio e encolhe conforme as seções chegam. O ponto fica na cor de quem leva.</p>
+<template id="ajuda-margem" data-titulo="Margem esperada">
+  <p>Por quantos pontos a página espera que termine, em votos válidos. A frase dá a faixa provável: em dois de cada três cenários o resultado cai dentro dela. O ponto é o resultado mais provável. Quando a faixa fica toda de um lado, ela ganha a cor de quem lidera; quando cruza o empate, fica cinza, porque pode ir para os dois lados.</p>
+  <p>Antes da urna, a faixa vem das pesquisas: média das últimas ondas corrigida pelo erro do 1º turno, com 3,3 pontos de incerteza. Durante a apuração, combina as pesquisas com a implícita da régua, e encolhe conforme as seções chegam.</p>
   <p><b>Próximo marco.</b> Os pontos da noite que mudam a leitura: 15% (a régua começa a ler), 50%, 67% (onde Lula virou em 2022), 90% e 99%, cada um com a hora em que chegou em 2022.</p>
 </template>
 <template id="ajuda-sobre" data-titulo="Sobre esta página">
@@ -346,12 +349,18 @@ function sigmaRegua(ef,fim){ return fim?0.01:0.3*Math.abs(ef)+0.15; }   // incer
 function posterior(imp,ef,fim){ if(!PRIOR) return null; const w0=1/(PRIOR.sigma0*PRIOR.sigma0), sr=sigmaRegua(ef,fim), wr=1/(sr*sr); const mu=(PRIOR.mu*w0+imp*wr)/(w0+wr), sd=Math.sqrt(1/(w0+wr)); let pL=100*Phi(mu/sd); if(!fim) pL=Math.max(1,Math.min(99,pL)); return {mu,sd,sr,pL,pF:100-pL,peso:100*wr/(w0+wr),fim}; }   // antes do fim, nunca 0 nem 100
 const MARCOS=[15,50,67,90,99];
 function proximoMarco(pst){ const m=MARCOS.find(x=>x>pst); if(m==null) return "em 2022, 100% só à 0h18"; const nomes={15:"a régua começa a ler",50:"metade",67:"virada de 2022",90:"reta final",99:"quase tudo"}; const h=HORAS[String(m)]||HORAS[String(m===67?68:m)]; return `próximo marco: ${m}% · ${nomes[m]}${h?` · ${String(h).replace(":","h")} em 2022`:""}`; }
-function renderFaixa(mu,sd,pst){
+function renderFaixa(mu,sd){
   const LIM=8, pos=x=>50+50*Math.max(-LIM,Math.min(LIM,x))/LIM;
-  if(mu==null){ $("faixav").textContent="–"; $("fxband").style.left="50%"; $("fxband").style.width="0"; $("fxdot").className="fx-dot"; return; }
-  const a=pos(mu-sd), b=pos(mu+sd); $("fxband").style.left=Math.min(a,b)+"%"; $("fxband").style.width=Math.abs(b-a)+"%";
+  if(mu==null){ $("faixav").textContent="–"; $("faixav").className="fv"; $("fxband").style.left="50%"; $("fxband").style.width="0"; $("fxband").className="fx-band"; $("fxdot").className="fx-dot"; return; }
+  const lo=mu-sd, hi=mu+sd, d=sd<1?1:0, n=x=>fmt(Math.abs(x),d);
+  const a=pos(lo), b=pos(hi); $("fxband").style.left=Math.min(a,b)+"%"; $("fxband").style.width=Math.abs(b-a)+"%";
   $("fxdot").style.left=pos(mu)+"%"; $("fxdot").className="fx-dot on"; $("fxdot").style.background=mu>0.05?"var(--lula)":(mu<-0.05?"var(--flavio)":"var(--fg)");
-  $("faixav").textContent=`${mu>0.05?"Lula":(mu<-0.05?"Flávio":"empate")} ${fmt(Math.abs(mu),1)} ± ${fmt(sd,1)}`; $("faixav").className="fv "+cls(mu);
+  let txt, lado="";
+  if(lo>0){ txt=`Lula à frente por ${n(lo)} a ${n(hi)} pontos`; lado="lula"; }
+  else if(hi<0){ txt=`Flávio à frente por ${n(hi)} a ${n(lo)} pontos`; lado="flavio"; }
+  else { txt=`Pode ir para os dois lados: Flávio por até ${n(lo)} ou Lula por até ${n(hi)}`; }
+  $("faixav").textContent=txt; $("faixav").className="fv "+(lado==="lula"?"pos":(lado==="flavio"?"neg":""));
+  $("fxband").className="fx-band "+lado;
 }
 const FOTO={L:"img/lula.jpg",F:"img/flavio.jpg"}, NOME={L:"Lula",F:"Flávio"};
 function mostrarFavorito(fav,p){
@@ -369,7 +378,7 @@ function renderChance(post){
   if(REPLAY){ $("pmeta").textContent=post?`ensaio: chance só pela régua (incerteza ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua"; if(post) renderFaixa(post.mu,post.sd); return; }
   const favPri=PRIOR.p_flavio>=50?"Flávio":"Lula", pPri=Math.max(PRIOR.p_flavio,100-PRIOR.p_flavio);
   $("pmeta").textContent=post?`antes da urna: ${favPri} ${fmt(pPri,0)}% · a apuração já pesa ${fmt(post.peso,0)}%`:`pelas pesquisas · ${PRIOR.n} institutos`;
-  if(post){ renderFaixa(post.mu,post.sd); } else { renderFaixa(PRIOR.mu,PRIOR.sigma0); $("veredito").textContent=pF>=60?"Flávio é o favorito pelas pesquisas, com a apuração por começar.":(pF<=40?"Lula é o favorito pelas pesquisas, com a apuração por começar.":"Empate pelas pesquisas, com a apuração por começar."); $("marco").textContent="em 2022, 15% das seções às 17h41"; }
+  if(post){ renderFaixa(post.mu,post.sd); } else { renderFaixa(PRIOR.mu,PRIOR.sigma0); $("veredito").textContent=pF>=60?"Flávio é o favorito pelas pesquisas, com a apuração por começar.":(pF<=40?"Lula é o favorito pelas pesquisas, com a apuração por começar.":"Empate pelas pesquisas, com a apuração por começar."); $("marco").textContent=`mais provável: ${PRIOR.mu>0.05?"Lula":(PRIOR.mu<-0.05?"Flávio":"empate")} ${fmt(Math.abs(PRIOR.mu),1)} · em 2022, 15% das seções às 17h41`; }
 }
 function renderInst(imp,fim){
   if(REPLAY){ $("inst").innerHTML=`<div class="vazio">no ensaio as pesquisas ficam de fora</div>`; $("instmeta").textContent=""; return; }
@@ -438,7 +447,7 @@ function render(br,ab,ufj){
   const m=sh.L-sh.F, ef=efeito(pst), imp=m-K*ef, fim=(br.and==="f"||pst>=99.99);
   const post=posterior(imp,ef,fim); renderChance(post); renderInst(imp,fim);
   $("veredito").textContent=fim?(m>0?"Lula venceu, pela totalização do TSE.":"Flávio venceu, pela totalização do TSE."):leituraTexto(pst,m,imp);
-  $("marco").textContent=fim?"totalização encerrada":proximoMarco(pst);
+  $("marco").textContent=(fim?"totalização encerrada":proximoMarco(pst))+(post?` · mais provável: ${post.mu>0.05?"Lula":(post.mu<-0.05?"Flávio":"empate")} ${fmt(Math.abs(post.mu),1)}`:"");
   $("progfill").style.width=Math.min(100,pst)+"%";
   $("status").textContent=fim?"totalização finalizada":"em andamento"; $("status").className="pill on";
   $("meta").textContent=`atualizado às ${(br.hg||"").slice(0,5).replace(":","h")} · ${fmt(t.st,0)} de ${fmt(t.ts,0)} seções`;
