@@ -106,6 +106,24 @@ def urna_1t_2026():
                     "abst": round(num(e.get("pan") or e.get("pa")), 2), "bn": round(100 * ((num(v.get("vb")) or 0) + (num(v.get("vn")) or 0)) / tv, 2) if tv else None, "validos": tot, "arquivo": f"{j.get('dg')} {j.get('hg')}"}
     with concurrent.futures.ThreadPoolExecutor(8) as ex: return dict(ex.map(get, UFS + ["br"]))
 
+def prior_pesquisas(pq):
+    """Última onda de cada instituto com campo encerrado em `corte` ou depois → margem Lula−Flávio bruta e corrigida por
+    fator_correcao × erro do 1º turno; centro = média das corrigidas; P(Flávio) = Φ(−centro/sigma0)."""
+    import math
+    ult = {}
+    for r in sorted(pq["pesquisas"], key=lambda r: r["fim"]):
+        if r["fim"] >= pq["corte"]: ult[r["inst"]] = r
+    linhas = []
+    for r in ult.values():
+        bruta = r["lula"] - r["flavio"]; corr = bruta + pq["fator_correcao"] * r["erro_1t"]
+        linhas.append({**r, "bruta": round(bruta, 2), "corrigida": round(corr, 2)})
+    linhas.sort(key=lambda r: r["fim"], reverse=True)
+    mu = sum(r["corrigida"] for r in linhas) / len(linhas); mub = sum(r["bruta"] for r in linhas) / len(linhas)
+    sd = pq["sigma0"]; phi = lambda z: 0.5 * (1 + math.erf(z / math.sqrt(2)))
+    return {"corte": pq["corte"], "fator": pq["fator_correcao"], "sigma0": sd, "n": len(linhas), "mu_bruta": round(mub, 2), "mu": round(mu, 2),
+            "p_flavio": round(100 * phi(-mu / sd), 1), "p_flavio_sem_correcao": round(100 * phi(-mub / sd), 1), "ultimas": linhas,
+            "todas": sorted(pq["pesquisas"], key=lambda r: r["fim"], reverse=True)}
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--munzona"); ap.add_argument("--sem-rede", action="store_true"); a = ap.parse_args()
     os.makedirs(DADOS, exist_ok=True); os.makedirs(DOCS, exist_ok=True)
@@ -119,6 +137,7 @@ def main():
         gravar("urna_1t_2026_uf.json", urna_1t_2026())
     if a.munzona: gravar("urna_2t_2022_uf.json", munzona_2t_2022(a.munzona))
     curva, det, u26, u22 = ler("curva_2t_2022.json"), ler("detalhe_2t_2022_uf.json"), ler("urna_1t_2026_uf.json"), ler("urna_2t_2022_uf.json")
+    pq = ler("pesquisas_2t.json"); prior = prior_pesquisas(pq) if pq else None
     faltam = [n for n, v in (("curva", curva), ("detalhe", det), ("urna 1T 2026", u26), ("urna 2T 2022", u22)) if v is None]
     if faltam: sys.exit(f"faltam dados: {faltam}")
     ref = {"gerado": datetime.datetime.now().isoformat(timespec="minutes"),
@@ -126,10 +145,14 @@ def main():
            "horas": {str(int(round(p["pst"]))): p["hora"] for p in curva["pontos"] if int(round(p["pst"])) in (2, 5, 10, 20, 30, 40, 50, 60, 68, 70, 80, 90, 95, 99, 100)},
            "virada2022": curva["virada"], "final2022": curva["final"],
            "uf2022": {u: {"margem": u22[u]["margem"], "lula": u22[u]["lula"], "abst": det[u]["abst"], "bn": det[u]["bn"]} for u in UFS + ["br"]},
-           "uf2026": {u: {"margem": u26[u]["margem"], "lula": u26[u]["lula"], "flavio": u26[u]["flavio"], "abst": u26[u]["abst"], "bn": u26[u]["bn"]} for u in UFS + ["br"]}}
+           "uf2026": {u: {"margem": u26[u]["margem"], "lula": u26[u]["lula"], "flavio": u26[u]["flavio"], "abst": u26[u]["abst"], "bn": u26[u]["bn"]} for u in UFS + ["br"]},
+           "prior": prior}
     open(os.path.join(DOCS, "referencia.js"), "w").write("// gerado por ferramentas/referencia.py a partir dos arquivos oficiais do TSE; não editar à mão\nwindow.REF=" + json.dumps(ref, ensure_ascii=False, separators=(",", ":")) + ";\n")
     print(f"ok: docs/referencia.js ({os.path.getsize(os.path.join(DOCS,'referencia.js'))} bytes)")
     print("final 2T 2022:", curva["final"], "virada:", curva["virada"])
     print("BR 2T 2022 abst/bn:", det["br"], "| BR 2022 L×B:", u22["br"], "| BR 1T 2026:", u26["br"])
+    if prior:
+        print(f"prior pelas pesquisas (corte {prior['corte']}, {prior['n']} institutos): bruta {prior['mu_bruta']:+.2f}, corrigida ×{prior['fator']} {prior['mu']:+.2f}, sigma0 {prior['sigma0']} → P(Flávio) {prior['p_flavio']}% (sem correção {prior['p_flavio_sem_correcao']}%)")
+        for r in prior["ultimas"]: print(f"   {r['inst']:18s} {r['onda']} fim {r['fim']} {r['modo']:6s} L {r['lula']:4.1f} × F {r['flavio']:4.1f}  bruta {r['bruta']:+5.1f}  erro1T {r['erro_1t']:+4.1f}  corrigida {r['corrigida']:+5.1f}")
 
 if __name__ == "__main__": main()

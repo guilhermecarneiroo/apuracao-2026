@@ -10,9 +10,11 @@ Uso:  python3 ferramentas/apuracao.py                 # uma leitura
       python3 ferramentas/apuracao.py --probe         # testa se os arquivos existem no TSE
       python3 ferramentas/apuracao.py --demo          # régua com dados fictícios
 """
-import argparse, csv, datetime, json, os, sys, time, urllib.error, urllib.request
+import argparse, csv, datetime, json, math, os, sys, time, urllib.error, urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from referencia import prior_pesquisas
 BASE = "https://resultados.tse.jus.br/oficial"
 UA = {"User-Agent": "Mozilla/5.0"}
 LULA, FLAVIO = "13", "22"
@@ -26,6 +28,15 @@ CURVA = ler_json("curva_2t_2022.json"); U22 = ler_json("urna_2t_2022_uf.json"); 
 PONTOS = [(p["pst"], p["efeito"]) for p in CURVA["pontos"]]
 HORAS = {int(round(p["pst"])): p["hora"] for p in CURVA["pontos"]}
 FINAL22 = CURVA["final"]["margem"]; VIRADA = CURVA["virada"]
+PRIOR = prior_pesquisas(ler_json("pesquisas_2t.json"))
+
+def phi(z): return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+def posterior(imp, ef, fim):
+    """Combina o prior das pesquisas N(mu, sigma0) com a implícita da régua N(imp, sr), sr = 30% da ordem de chegada que falta + piso 0,15."""
+    sr = 0.01 if fim else 0.3 * abs(ef) + 0.15
+    w0, wr = 1 / PRIOR["sigma0"] ** 2, 1 / sr ** 2
+    mu = (PRIOR["mu"] * w0 + imp * wr) / (w0 + wr); sd = math.sqrt(1 / (w0 + wr)); pL = 100 * phi(mu / sd)
+    return {"pL": pL, "pF": 100 - pL, "sr": sr, "peso": 100 * wr / (w0 + wr)}
 
 def num(s):
     if s is None: return None
@@ -82,13 +93,16 @@ def shares(votos):
 def dois(uf):
     r = U26.get(uf); return 100 * (r["lula"] - r["flavio"]) / (r["lula"] + r["flavio"]) if r else None
 
-def regua(pst, L, F, bn, abst, por_uf, ab, log=None, ts=None):
-    m = L - F; ef = efeito(pst); imp = m - K * ef
+def regua(pst, L, F, bn, abst, por_uf, ab, log=None, ts=None, fim=False):
+    m = L - F; ef = efeito(pst); imp = m - K * ef; post = posterior(imp, ef, fim)
     print(f"\n=== {ts or datetime.datetime.now().strftime('%H:%M:%S')} — {pst:.2f}% das seções ({hora_ref(pst)}) ===")
     print(f"Válidos: Lula {L:.2f}  Flávio {F:.2f}  margem (L−F) {m:+.2f}" + (f"  brancos+nulos {bn:.2f}% (2022: {D22['br']['bn']}; 1ºT: {U26['br']['bn']})" if bn is not None else "")
           + (f"  abstenção {abst:.2f}% (2022: {D22['br']['abst']}; 1ºT: {U26['br']['abst']})" if abst is not None else ""))
     print(f"Ordem de chegada de 2022 nesta fatia: {ef:+.2f}. Implícita k=1: {imp:+.2f}  |  k=0,5: {m - 0.5*ef:+.2f}  |  parcial de 2022 nesta altura: {FINAL22 + ef:+.2f}")
     print(f"Se o final for Lula +2 / empate / Flávio +2, a parcial agora seria {2 + K*ef:+.1f} / {K*ef:+.1f} / {-2 + K*ef:+.1f}")
+    print(f"Chance: Flávio {post['pF']:.0f}% × Lula {post['pL']:.0f}%  (pelas pesquisas, antes da urna: Flávio {PRIOR['p_flavio']:.0f}%; a apuração já pesa {post['peso']:.0f}%, incerteza da régua ±{post['sr']:.2f})")
+    inst = sorted(PRIOR["ultimas"], key=lambda r: abs(imp - r["bruta"]))
+    print("Institutos (distância implícita − pesquisa, do mais perto ao mais longe): " + "  ".join(f"{r['inst']} {r['bruta']:+.1f} ({imp - r['bruta']:+.1f})" for r in inst))
     if pst < 15: print("Leitura: cedo demais (até 15% a ordem de chegada domina).")
     else:
         q = "Lula tende a vencer" if imp > 1 else ("Flávio tende a vencer" if imp < -1 else "empate técnico pela régua (entre −1 e +1 o método não separa)")
@@ -107,7 +121,7 @@ def regua(pst, L, F, bn, abst, por_uf, ab, log=None, ts=None):
         ne = [x for x in ufs if x[0] in NE]
         if ne: print(f"   Nordeste: {sum(x[1] for x in ne)/len(ne):.1f}% em {len(ne)} UFs (1ºT {sum(U26[x[0]]['abst'] for x in ne)/len(ne):.1f}; 2022 {sum(D22[x[0]]['abst'] for x in ne)/len(ne):.1f})")
     if log is not None:
-        log.writerow([ts or datetime.datetime.now().isoformat(timespec="seconds"), f"{pst:.2f}", f"{L:.2f}", f"{F:.2f}", f"{m:+.2f}", f"{imp:+.2f}",
+        log.writerow([ts or datetime.datetime.now().isoformat(timespec="seconds"), f"{pst:.2f}", f"{L:.2f}", f"{F:.2f}", f"{m:+.2f}", f"{imp:+.2f}", f"{post['pF']:.1f}",
                       "" if bn is None else f"{bn:.2f}", "" if abst is None else f"{abst:.2f}"]
                      + [f"{linhas[u][0]:+.2f}" if u in linhas else "" for u in UFS_PADRAO.split(",")]
                      + [f"{linhas[u][1]}" if u in linhas and linhas[u][1] is not None else "" for u in UFS_PADRAO.split(",")])
@@ -120,7 +134,8 @@ def leitura(args, log=None):
     votos, tot = parse_u(u_j); L, F, soma = shares(votos)
     pst = tot["pst"] if tot["pst"] is not None else ab.get("br", {}).get("pst", 0.0)
     if not tot["tv"] or soma == 0:
-        print(f"{datetime.datetime.now():%H:%M:%S}: ainda sem votos totalizados (arquivo de {u_j.get('dg')} {u_j.get('hg')}; seções {tot['st']}/{tot['ts']}; eleitorado {tot['te']:,})."); return False
+        print(f"{datetime.datetime.now():%H:%M:%S}: ainda sem votos totalizados (arquivo de {u_j.get('dg')} {u_j.get('hg')}; seções {tot['st']}/{tot['ts']}; eleitorado {tot['te']:,}). "
+              f"Chance pelas pesquisas: Flávio {PRIOR['p_flavio']:.0f}% ({PRIOR['n']} institutos, corrigida {PRIOR['mu']:+.1f} ± {PRIOR['sigma0']})."); return False
     bn = 100 * ((tot["vb"] or 0) + (tot["vn"] or 0)) / tot["tv"] if tot["tv"] else None
     por_uf = {}
     for uf in args.ufs.split(","):
@@ -129,7 +144,7 @@ def leitura(args, log=None):
         v_uf, t_uf = parse_u(j)
         if sum(v_uf.values()) > 0: por_uf[uf] = v_uf
         ab.setdefault(uf, {}); ab[uf].update({k: t_uf[k] for k in ("pst", "pa") if t_uf[k] is not None})
-    regua(pst, L, F, bn, tot["pa"], por_uf, ab, log=log, ts=f"{u_j.get('dg')} {u_j.get('hg')} (hora do arquivo)")
+    regua(pst, L, F, bn, tot["pa"], por_uf, ab, log=log, ts=f"{u_j.get('dg')} {u_j.get('hg')} (hora do arquivo)", fim=(u_j.get("and") == "f" or pst >= 99.99))
     return True
 
 def demo():
@@ -159,7 +174,7 @@ if __name__ == "__main__":
     logf = log = None
     if a.loop:
         novo = not os.path.exists(a.log); logf = open(a.log, "a", newline=""); log = csv.writer(logf)
-        if novo: log.writerow(["hora_tse", "pst", "lula", "flavio", "margem", "implicita_k1", "brancos_nulos", "abstencao"] + [f"{u}_m" for u in UFS_PADRAO.split(",")] + [f"{u}_pst" for u in UFS_PADRAO.split(",")])
+        if novo: log.writerow(["hora_tse", "pst", "lula", "flavio", "margem", "implicita_k1", "p_flavio", "brancos_nulos", "abstencao"] + [f"{u}_m" for u in UFS_PADRAO.split(",")] + [f"{u}_pst" for u in UFS_PADRAO.split(",")])
     while True:
         leitura(a, log)
         if logf: logf.flush()
