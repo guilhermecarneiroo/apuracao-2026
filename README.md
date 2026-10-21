@@ -2,7 +2,7 @@
 
 Página estática que lê os arquivos oficiais do Divulga/TSE direto do navegador a cada 2 minutos. Duas telas e um "como a conta é feita":
 
-1. **Chance de vitória**, a frase de leitura em português claro, a **margem final esperada** com a faixa de incerteza, o próximo marco da noite com a hora de 2022, e o placar Lula × Flávio em votos válidos. A barra sob o título é a fatia de seções apuradas. Antes da urna, a chance vem das pesquisas corrigidas pelo erro do 1º turno; durante a apuração, combinada com a régua. Antes do fim, a chance nunca mostra 0 nem 100.
+1. **Chance de ser presidente**: um número só, o de quem está na frente, na cor dele, com a foto oficial do TSE do favorito à frente da do outro e um anel que enche com a chance; a frase de leitura em português claro, a **margem final esperada** com a faixa de incerteza, o próximo marco da noite com a hora de 2022, e o placar Lula × Flávio em votos válidos. A barra sob o título é a fatia de seções apuradas. Antes da urna, a chance vem das pesquisas corrigidas pelo erro do 1º turno; durante a apuração, combinada com a régua. Antes do fim, a chance nunca mostra 0 nem 100.
 2. **A aposta de cada campanha, contra o 1º turno:** abstenção nacional e no Nordeste (o eleitor que faltou no 1º turno, que a campanha de Lula foi buscar); abstenção nos 21 estados sem 2º turno de governador contra os 6 com (o medo do PL, de que seu eleitor ficasse em casa); brancos e nulos; e a fatia dos votos dos eliminados que foi a Lula, contra os ~62% de que ele precisava (Folha), que só fecha no fim da noite.
 Cada bloco tem um botão "?" que abre um painel por cima da tela com a explicação daquele bloco; na tela ficam só dado e veredito. O rodapé abre "sobre esta página" do mesmo jeito.
 

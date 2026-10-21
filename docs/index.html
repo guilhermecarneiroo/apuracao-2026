@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <title>Apuração 2026 · 2º turno</title>
 <meta name="description" content="Leitura ao vivo da apuração do 2º turno de 2026 pelos arquivos oficiais do TSE, descontada a ordem de chegada das seções medida em 2022.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <style>
 /* Boletim de urna encontra placar de TV: uma coluna, números grandes, rótulos em mono, filetes de 1px, sem cartões. Ver DESIGN.md. */
 :root{
@@ -47,15 +47,14 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 .faixa-leg{display:flex;justify-content:space-between;font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
 #marco{margin-top:10px}
 /* chance: o placar de TV */
-.chance{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-items:end}
-.chance .nome{font-size:11px;font-family:"Press Start 2P",var(--mono);text-transform:uppercase;letter-spacing:0;color:var(--muted);line-height:1.4}
-.chance .boneco{width:100px;height:140px;display:block;margin-top:10px}
-.chance .f .boneco{margin-left:auto}
-.chance .pv{font-size:32px;font-family:"Press Start 2P",var(--font);font-weight:400;line-height:1.1;letter-spacing:0;margin-top:12px}
-:root{--sp-o:#161a18;--sp-j:#2b3550;--sp-w:#f4f4f0;--sp-sash1:#2a9d5c;--sp-sash2:#f5c400;--sp-off:#c9cfcb}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --sp-o:#07090a;--sp-j:#46557a;--sp-w:#e6e6e0;--sp-off:#2e3734 } }
-:root[data-theme="dark"]{ --sp-o:#07090a;--sp-j:#46557a;--sp-w:#e6e6e0;--sp-off:#2e3734 }
-.chance .l .pv{color:var(--lula)} .chance .f{text-align:right} .chance .f .pv{color:var(--flavio)}
+.chance{display:grid;grid-template-columns:auto 1fr;gap:0 16px;align-items:center}
+.fotos{position:relative;width:168px;height:132px}
+.anel{position:absolute;left:0;top:0;width:132px;height:132px;z-index:1}
+.atras{position:absolute;left:100px;top:10px;width:68px;height:68px;border-radius:50%;overflow:hidden;z-index:0;border:3px solid var(--bg);background:var(--track)}
+.atras img{width:100%;height:100%;object-fit:cover;display:block}
+.num{text-align:right;min-width:0}
+.num .pv{font-size:64px;font-weight:800;line-height:1;letter-spacing:-.03em;font-variation-settings:"wdth" 100}
+.num .quem{font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:6px}
 .chance .barra{grid-column:1/-1;margin-top:12px}
 .chance .meta{grid-column:1/-1;margin-top:8px}
 .barra{position:relative;height:16px;background:var(--track);overflow:hidden;display:flex;gap:2px}
@@ -137,8 +136,8 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .folha-corpo p{margin:0 0 12px;max-width:62ch} .folha-corpo p:last-child{margin-bottom:0}
 .folha-corpo b{font-weight:600}
 .folha-corpo .mini{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:16px 0 6px}
-@media (prefers-reduced-motion: no-preference){ .pv,.pct,.m,.v{transition:color .25s} .folha[open]{animation:sobe .22s ease-out} @keyframes sobe{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}} }
-@media (min-width:520px){ .chance .pv{font-size:40px} .chance .boneco{width:120px;height:168px} .placar2 .pct{font-size:44px} h1{font-size:40px} }
+@media (prefers-reduced-motion: no-preference){ .pv,.pct,.m,.v{transition:color .25s} #arc{transition:stroke-dasharray .5s ease} .folha[open]{animation:sobe .22s ease-out} @keyframes sobe{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}} }
+@media (min-width:520px){ .num .pv{font-size:84px} .placar2 .pct{font-size:44px} h1{font-size:40px} }
 </style>
 </head>
 <body>
@@ -153,10 +152,13 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 
 <div id="erro" class="erro" hidden></div>
 
-<h2><span>Chance de vitória</span><button class="help" type="button" data-ajuda="chance" aria-label="Como ler a chance de vitória">?</button></h2>
-<div class="chance" aria-label="Chance de vitória" aria-live="polite">
-  <div class="l"><div class="nome">Lula</div><svg class="boneco" id="spL" viewBox="0 0 20 28" aria-hidden="true" shape-rendering="crispEdges"></svg><div class="pv" id="pLula">–</div></div>
-  <div class="f"><div class="nome">Flávio</div><svg class="boneco" id="spF" viewBox="0 0 20 28" aria-hidden="true" shape-rendering="crispEdges"></svg><div class="pv" id="pFlavio">–</div></div>
+<h2><span>Chance de ser presidente</span><button class="help" type="button" data-ajuda="chance" aria-label="Como ler a chance de ser presidente">?</button></h2>
+<div class="chance" aria-live="polite">
+  <div class="fotos">
+    <svg class="anel" id="anelFav" viewBox="0 0 120 120" role="img" aria-label="Favorito"><defs><clipPath id="clipFav"><circle cx="60" cy="60" r="42"/></clipPath></defs><circle cx="60" cy="60" r="50" fill="none" stroke="var(--track)" stroke-width="8"/><circle id="arc" cx="60" cy="60" r="50" fill="none" stroke="var(--fg)" stroke-width="8" stroke-dasharray="0 400" transform="rotate(-90 60 60)"/><image id="fotoFav" href="" x="18" y="18" width="84" height="84" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipFav)"/></svg>
+    <div class="atras"><img id="fotoOutro" src="" alt=""></div>
+  </div>
+  <div class="num"><div class="pv" id="pFav">–</div><div class="quem" id="quemFav">—</div></div>
   <div class="barra" id="pbar" aria-hidden="true"><div class="l" style="width:50%"></div><div class="f" style="width:50%"></div></div>
   <div class="veredito" id="veredito">—</div>
   <div class="meta" id="pmeta">—</div>
@@ -225,7 +227,8 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 <div class="lista hist" id="hist"><div class="vazio">sem leituras ainda</div></div>
 </details>
 
-<template id="ajuda-chance" data-titulo="Chance de vitória">
+<template id="ajuda-chance" data-titulo="Chance de ser presidente">
+  <p>O número é a chance de quem está na frente; a foto dele fica à frente da do outro, e o anel enche com a chance. Se a apuração virar, as fotos trocam de lugar. A barra embaixo mostra os dois lados.</p>
   <p>Antes da urna, a chance vem das pesquisas: a última onda de cada instituto com campo recente, em votos válidos entre os dois, corrigida pela metade do erro que o mesmo instituto cometeu no 1º turno de 2026, com incerteza de ±3,3 pontos na margem, o tamanho do erro das pesquisas finais de 2º turno desde 2006.</p>
   <p>Durante a apuração entra a régua, com incerteza própria que encolhe conforme as seções chegam. A chance é a combinação das duas, cada uma pesada pela sua precisão. A linha abaixo da barra diz quanto a apuração já pesa. Aos 100% a chance é 0 ou 100.</p>
   <p class="mini">Placar</p>
@@ -279,6 +282,7 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
   <p>Lê os arquivos oficiais do Divulga/TSE (eleição 6258) direto do seu navegador a cada 2 minutos. A hora no topo é a do arquivo do TSE, em Brasília; o número de seções é o total de seções eleitorais totalizadas sobre as 499.248 do país, com 158,7 milhões de eleitores. Referências de 2022 e do 1º turno vêm dos dados abertos do TSE. Página independente, sem vínculo com o TSE, partidos ou campanhas. Em caso de dúvida, vale o <a href="https://resultados.tse.jus.br/" target="_blank" rel="noopener">Divulga oficial</a>.</p>
   <p><b>Ensaio.</b> <a href="?replay=2022">?replay=2022</a> percorre a apuração real do 2º turno de 2022 ponto a ponto, para aprender a ler a página antes de domingo; a chance ali vem só da régua, sem pesquisas, e Bolsonaro aparece nas casas de Flávio.</p>
   <p><b>Aviso.</b> Se o arquivo do TSE ficar 10 minutos sem mudar durante a apuração, o selo do topo avisa "TSE parado".</p>
+  <p><b>Fotos.</b> As fotos dos candidatos são as oficiais do registro de candidatura, publicadas pelo TSE no Divulga, as mesmas da tela da urna.</p>
 </template>
 
 <dialog id="folha" class="folha" aria-labelledby="folha-titulo">
@@ -349,31 +353,22 @@ function renderFaixa(mu,sd,pst){
   $("fxdot").style.left=pos(mu)+"%"; $("fxdot").className="fx-dot on"; $("fxdot").style.background=mu>0.05?"var(--lula)":(mu<-0.05?"var(--flavio)":"var(--fg)");
   $("faixav").textContent=`${mu>0.05?"Lula":(mu<-0.05?"Flávio":"empate")} ${fmt(Math.abs(mu),1)} ± ${fmt(sd,1)}`; $("faixav").className="fv "+cls(mu);
 }
-/* bonecos de 16 bits: grade 20×28, cada letra é uma cor; a faixa presidencial enche com a chance */
-const SP_HEAD_L=["hhhhhhhhhh","hhhhhhhhhh","hhsssssshh","hssssssssh","hsessssesh","ssssssssss","ssssssssss","sbbmmmmbbs","bbbbbbbbbb","bbbbbbbbbb","sbbbbbbbbs"];
-const SP_HEAD_F=["hhhhhhhhhh","hhhhhhhhhh","hhsssssshh","hssssssssh","hsessssesh","ssssssssss","ssssssssss","sssmmmmsss","ssssssssss","ssssssssss","ssssssssss"];
-function spriteRows(head){ const r=["....................",".....oooooooooo....."]; head.forEach((h,i)=>r.push(i===0?"....oo"+h.slice(1,9)+"oo....":"....o"+h+"o....")); r.push(".....oooooooooo.....",".......osssso.......",".......osssso.......",".ojjjjjjwsswjjjjjjo.",".ojjjjjwwttwwjjjjjo."); for(let i=0;i<9;i++) r.push(".ojjjjjjwttwjjjjjjo."); r.push(".oooooooooooooooooo."); return r; }
-const SP_PAL={L:{h:"#dcdcd8",b:"#c3c3bf",s:"#b97a52",e:"#1a1a1a",m:"#7a4034",t:"var(--lula)"},F:{h:"#3a2a20",s:"#e5b592",e:"#1a1a1a",m:"#b06a50",t:"var(--flavio)"}};
-function buildSprite(id,quem,mirror){
-  const svg=$(id); if(!svg) return [];
-  const rows=spriteRows(quem==="L"?SP_HEAD_L:SP_HEAD_F), pal=SP_PAL[quem]; let out="";
-  const X=x=>mirror?19-x:x;
-  rows.forEach((row,y)=>{ for(let x=0;x<20;x++){ const c=row[x]; if(c===".") continue; const f=c==="o"?"var(--sp-o)":(c==="j"?"var(--sp-j)":(c==="w"?"var(--sp-w)":pal[c])); out+=`<rect x="${X(x)}" y="${y}" width="1" height="1" fill="${f}"/>`; } });
-  const cells=[]; for(let y=16;y<=27;y++){ const x0=2+Math.round((y-16)*13/11); for(let k=0;k<3;k++){ cells.push({x:X(x0+k),y,k}); } }
-  out+=cells.map((c,i)=>`<rect class="sash" data-i="${i}" x="${c.x}" y="${c.y}" width="1" height="1" fill="var(--sp-off)"/>`).join("");
-  svg.innerHTML=out; return Array.from(svg.querySelectorAll(".sash")).map((el,i)=>({el,k:cells[i].k}));
+const FOTO={L:"img/lula.jpg",F:"img/flavio.jpg"}, NOME={L:"Lula",F:"Flávio"};
+function mostrarFavorito(fav,p){
+  const outro=fav==="L"?"F":"L", C=2*Math.PI*50;
+  $("fotoFav").setAttribute("href",FOTO[fav]); $("fotoOutro").src=FOTO[outro]; $("fotoOutro").alt=NOME[outro];
+  $("anelFav").setAttribute("aria-label",`${NOME[fav]}, ${fmt(p,0)}% de chance de ser presidente`);
+  $("arc").setAttribute("stroke-dasharray",`${C*p/100} ${C}`); $("arc").setAttribute("stroke",fav==="L"?"var(--lula)":"var(--flavio)");
+  $("pFav").textContent=fmt(p,0)+"%"; $("pFav").className="pv "+(fav==="L"?"pos":"neg"); $("quemFav").textContent=NOME[fav];
 }
-let SASH_L=[], SASH_F=[];   // montados antes do primeiro render, depois que $ existe
-function setSash(cells,pct){ const n=Math.round(cells.length*Math.max(0,Math.min(100,pct??0))/100); cells.forEach((c,i)=>{ c.el.setAttribute("fill",i<n?(c.k===1?"var(--sp-sash2)":"var(--sp-sash1)"):"var(--sp-off)"); }); }
 function renderChance(post){
   if(!PRIOR){ $("pmeta").textContent="sem pesquisas carregadas"; return; }
-  if(REPLAY){ const pF=post?post.pF:50, pL=100-pF; $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%"; setSash(SASH_L,pL); setSash(SASH_F,pF);
-    $("pmeta").textContent=post?`ensaio: chance só pela régua, sem pesquisas (incerteza da régua ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua, sem pesquisas"; if(post) renderFaixa(post.mu,post.sd); return; }
-  const pF=post?post.pF:PRIOR.p_flavio, pL=100-pF;
-  $("pLula").textContent=fmt(pL,0)+"%"; $("pFlavio").textContent=fmt(pF,0)+"%"; setSash(SASH_L,pL); setSash(SASH_F,pF);
+  const pF=post?post.pF:(REPLAY?50:PRIOR.p_flavio), pL=100-pF, fav=pF>=pL?"F":"L";
+  mostrarFavorito(fav,Math.max(pF,pL));
   const b=$("pbar").children; b[0].style.width=pL+"%"; b[1].style.width=pF+"%";
-  $("pmeta").textContent=post?`antes da urna: Flávio ${fmt(PRIOR.p_flavio,0)}% · a apuração já pesa ${fmt(post.peso,0)}%`
-    :`pelas pesquisas · ${PRIOR.n} institutos`;
+  if(REPLAY){ $("pmeta").textContent=post?`ensaio: chance só pela régua (incerteza ±${fmt(post.sr,1)})`:"ensaio: chance só pela régua"; if(post) renderFaixa(post.mu,post.sd); return; }
+  const favPri=PRIOR.p_flavio>=50?"Flávio":"Lula", pPri=Math.max(PRIOR.p_flavio,100-PRIOR.p_flavio);
+  $("pmeta").textContent=post?`antes da urna: ${favPri} ${fmt(pPri,0)}% · a apuração já pesa ${fmt(post.peso,0)}%`:`pelas pesquisas · ${PRIOR.n} institutos`;
   if(post){ renderFaixa(post.mu,post.sd); } else { renderFaixa(PRIOR.mu,PRIOR.sigma0); $("veredito").textContent=pF>=60?"Flávio é o favorito pelas pesquisas, com a apuração por começar.":(pF<=40?"Lula é o favorito pelas pesquisas, com a apuração por começar.":"Empate pelas pesquisas, com a apuração por começar."); $("marco").textContent="em 2022, 15% das seções às 17h41"; }
 }
 function renderInst(imp,fim){
@@ -544,7 +539,6 @@ function abrirAjuda(id){ const t=document.getElementById("ajuda-"+id); if(!t||!f
 function fecharAjuda(){ if(!folha) return; if(folha.open&&typeof folha.close==="function") folha.close(); else folha.removeAttribute("open"); }
 document.addEventListener("click",ev=>{ const b=ev.target.closest("[data-ajuda]"); if(b){ ev.preventDefault(); abrirAjuda(b.dataset.ajuda); } });
 if(folha){ $("folha-fechar").addEventListener("click",fecharAjuda); folha.addEventListener("click",ev=>{ if(ev.target===folha) fecharAjuda(); }); }
-SASH_L=buildSprite("spL","L",false); SASH_F=buildSprite("spF","F",true);
 const q=new URLSearchParams(location.search);
 if(q.has("replay")){ replay(q); } else if(q.has("demo")){ demo(q); } else { renderChart(); atualizar(); }
 })();
