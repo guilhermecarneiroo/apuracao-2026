@@ -25,12 +25,31 @@ h2{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.12em;color
 .nota{font:13px/1.5 var(--mono);color:var(--muted);margin-top:14px}
 .urna{display:block;width:150px;height:auto;margin-top:10px} .f .urna{margin-left:auto}
 .fita{display:block;width:150px;height:auto;margin-top:10px} .f .fita{margin-left:auto}
+.anel{display:block;width:124px;height:124px;margin-top:10px} .f .anel{margin-left:auto}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div class="eyebrow">prévia · chance de vitória · 61 × 39</div>
 <h1>Três artes para a faixa</h1>
+
+<h2>Opção 4 · Foto oficial com anel da chance</h2>
+<div class="chance">
+  <div class="l"><div class="nome">Lula</div><svg class="anel" id="p4L" viewBox="0 0 120 120" aria-hidden="true"></svg><div class="pv">61%</div></div>
+  <div class="f"><div class="nome">Flávio</div><svg class="anel" id="p4F" viewBox="0 0 120 120" aria-hidden="true"></svg><div class="pv">39%</div></div>
+  <div class="barra"><div class="a"></div><div class="b"></div></div>
+  <div class="veredito">Empate técnico pela régua.</div>
+</div>
+<div class="nota">foto oficial do TSE (a mesma que aparece na urna), recortada em círculo; o anel na cor do candidato enche no sentido do relógio conforme a chance</div>
+
+<h2>Opção 5 · Foto oficial, anel nas cores da faixa</h2>
+<div class="chance">
+  <div class="l"><div class="nome">Lula</div><svg class="anel" id="p5L" viewBox="0 0 120 120" aria-hidden="true"></svg><div class="pv">61%</div></div>
+  <div class="f"><div class="nome">Flávio</div><svg class="anel" id="p5F" viewBox="0 0 120 120" aria-hidden="true"></svg><div class="pv">39%</div></div>
+  <div class="barra"><div class="a"></div><div class="b"></div></div>
+  <div class="veredito">Empate técnico pela régua.</div>
+</div>
+<div class="nota">igual à 4, mas o anel é a faixa presidencial: verde com o filete amarelo</div>
 
 <h2>Opção 1 · Pictograma</h2>
 <div class="chance">
@@ -88,6 +107,18 @@ function urna(id,pct,mirror,foto,num,nome){
 }
 /* 3. só a faixa */
 function fita(id,pct,mirror){ $(id).innerHTML=`<g ${mirror?'transform="translate(150 0) scale(-1 1)"':""}>${faixa([8,10],[142,60],14,pct)}</g>`; }
+/* 4/5. foto com anel: arco começa no topo e anda no sentido do relógio; para o da direita, anti-horário (espelho) */
+function anel(id,pct,foto,cor,faixa,mirror){
+  const r=50, C=2*Math.PI*r, d=C*pct/100;
+  const arco=(stroke,w,dash)=>`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-dasharray="${dash} ${C}" transform="rotate(-90 60 60)${mirror?" scale(-1 1) translate(-120 0)":""}"/>`;
+  const svg=`<defs><clipPath id="${id}c"><circle cx="60" cy="60" r="42"/></clipPath></defs>
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--track)" stroke-width="8"/>
+    ${faixa?arco("var(--sash1)",8,d)+arco("var(--sash2)",2.5,d):arco(cor,8,d)}
+    <image href="${foto}" x="18" y="18" width="84" height="84" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id}c)"/>`;
+  $(id).innerHTML=svg;
+}
+anel("p4L",61,"img/lula.jpg","var(--lula)",false,false); anel("p4F",39,"img/flavio.jpg","var(--flavio)",false,true);
+anel("p5L",61,"img/lula.jpg","var(--lula)",true,false); anel("p5F",39,"img/flavio.jpg","var(--flavio)",true,true);
 picto("p1L",61,false); picto("p1F",39,true);
 urna("p2L",61,false,"","13","LULA"); urna("p2F",39,true,"","22","FLÁVIO");   // fotos oficiais: o DivulgaCand recusou o download (403); silhueta no lugar
 fita("p3L",61,false); fita("p3F",39,true);
