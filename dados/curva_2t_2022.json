@@ -1,0 +1,370 @@
+{
+ "final": {
+  "bn": 4.59,
+  "bolsonaro": 49.1,
+  "hora": "31/10/2022 00:18:04",
+  "lula": 50.9,
+  "margem": 1.8
+ },
+ "fonte": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2022/Historico_Totalizacao_Presidente_BR_2T_2022.zip",
+ "pontos": [
+  {
+   "efeito": -12.21,
+   "hora": "17:10",
+   "margem": -10.4,
+   "pst": 0.49
+  },
+  {
+   "efeito": -14.45,
+   "hora": "17:14",
+   "margem": -12.65,
+   "pst": 1.0
+  },
+  {
+   "efeito": -15.03,
+   "hora": "17:16",
+   "margem": -13.22,
+   "pst": 1.5
+  },
+  {
+   "efeito": -14.95,
+   "hora": "17:18",
+   "margem": -13.14,
+   "pst": 2.01
+  },
+  {
+   "efeito": -12.41,
+   "hora": "17:21",
+   "margem": -10.61,
+   "pst": 3.0
+  },
+  {
+   "efeito": -9.78,
+   "hora": "17:23",
+   "margem": -7.97,
+   "pst": 4.0
+  },
+  {
+   "efeito": -8.37,
+   "hora": "17:25",
+   "margem": -6.57,
+   "pst": 5.0
+  },
+  {
+   "efeito": -7.78,
+   "hora": "17:27",
+   "margem": -5.98,
+   "pst": 6.01
+  },
+  {
+   "efeito": -7.09,
+   "hora": "17:28",
+   "margem": -5.28,
+   "pst": 7.0
+  },
+  {
+   "efeito": -6.53,
+   "hora": "17:30",
+   "margem": -4.73,
+   "pst": 7.99
+  },
+  {
+   "efeito": -5.88,
+   "hora": "17:32",
+   "margem": -4.07,
+   "pst": 9.0
+  },
+  {
+   "efeito": -5.85,
+   "hora": "17:33",
+   "margem": -4.04,
+   "pst": 9.99
+  },
+  {
+   "efeito": -5.52,
+   "hora": "17:36",
+   "margem": -3.71,
+   "pst": 12.0
+  },
+  {
+   "efeito": -5.26,
+   "hora": "17:40",
+   "margem": -3.45,
+   "pst": 14.02
+  },
+  {
+   "efeito": -5.09,
+   "hora": "17:43",
+   "margem": -3.29,
+   "pst": 15.99
+  },
+  {
+   "efeito": -5.14,
+   "hora": "17:45",
+   "margem": -3.34,
+   "pst": 17.99
+  },
+  {
+   "efeito": -4.9,
+   "hora": "17:49",
+   "margem": -3.09,
+   "pst": 20.01
+  },
+  {
+   "efeito": -4.68,
+   "hora": "17:51",
+   "margem": -2.88,
+   "pst": 22.0
+  },
+  {
+   "efeito": -4.35,
+   "hora": "17:54",
+   "margem": -2.54,
+   "pst": 24.0
+  },
+  {
+   "efeito": -4.27,
+   "hora": "17:57",
+   "margem": -2.46,
+   "pst": 26.0
+  },
+  {
+   "efeito": -4.09,
+   "hora": "17:59",
+   "margem": -2.28,
+   "pst": 28.0
+  },
+  {
+   "efeito": -3.92,
+   "hora": "18:02",
+   "margem": -2.11,
+   "pst": 30.01
+  },
+  {
+   "efeito": -3.76,
+   "hora": "18:05",
+   "margem": -1.95,
+   "pst": 31.99
+  },
+  {
+   "efeito": -3.5,
+   "hora": "18:08",
+   "margem": -1.7,
+   "pst": 33.99
+  },
+  {
+   "efeito": -3.48,
+   "hora": "18:10",
+   "margem": -1.67,
+   "pst": 36.0
+  },
+  {
+   "efeito": -3.24,
+   "hora": "18:13",
+   "margem": -1.43,
+   "pst": 38.01
+  },
+  {
+   "efeito": -3.08,
+   "hora": "18:15",
+   "margem": -1.28,
+   "pst": 40.01
+  },
+  {
+   "efeito": -2.98,
+   "hora": "18:18",
+   "margem": -1.18,
+   "pst": 42.0
+  },
+  {
+   "efeito": -2.89,
+   "hora": "18:20",
+   "margem": -1.09,
+   "pst": 44.01
+  },
+  {
+   "efeito": -2.71,
+   "hora": "18:22",
+   "margem": -0.9,
+   "pst": 46.02
+  },
+  {
+   "efeito": -2.59,
+   "hora": "18:24",
+   "margem": -0.78,
+   "pst": 48.0
+  },
+  {
+   "efeito": -2.42,
+   "hora": "18:26",
+   "margem": -0.62,
+   "pst": 50.03
+  },
+  {
+   "efeito": -2.32,
+   "hora": "18:29",
+   "margem": -0.51,
+   "pst": 52.0
+  },
+  {
+   "efeito": -2.24,
+   "hora": "18:30",
+   "margem": -0.44,
+   "pst": 54.0
+  },
+  {
+   "efeito": -2.21,
+   "hora": "18:32",
+   "margem": -0.4,
+   "pst": 56.02
+  },
+  {
+   "efeito": -2.08,
+   "hora": "18:34",
+   "margem": -0.28,
+   "pst": 58.0
+  },
+  {
+   "efeito": -2.04,
+   "hora": "18:36",
+   "margem": -0.24,
+   "pst": 59.99
+  },
+  {
+   "efeito": -2.01,
+   "hora": "18:38",
+   "margem": -0.21,
+   "pst": 61.97
+  },
+  {
+   "efeito": -1.95,
+   "hora": "18:40",
+   "margem": -0.14,
+   "pst": 64.02
+  },
+  {
+   "efeito": -1.85,
+   "hora": "18:42",
+   "margem": -0.04,
+   "pst": 65.99
+  },
+  {
+   "efeito": -1.8,
+   "hora": "18:44",
+   "margem": 0.01,
+   "pst": 67.99
+  },
+  {
+   "efeito": -1.69,
+   "hora": "18:46",
+   "margem": 0.11,
+   "pst": 69.98
+  },
+  {
+   "efeito": -1.61,
+   "hora": "18:48",
+   "margem": 0.19,
+   "pst": 71.98
+  },
+  {
+   "efeito": -1.54,
+   "hora": "18:50",
+   "margem": 0.27,
+   "pst": 73.99
+  },
+  {
+   "efeito": -1.47,
+   "hora": "18:52",
+   "margem": 0.34,
+   "pst": 76.0
+  },
+  {
+   "efeito": -1.31,
+   "hora": "18:54",
+   "margem": 0.49,
+   "pst": 78.01
+  },
+  {
+   "efeito": -1.23,
+   "hora": "18:56",
+   "margem": 0.57,
+   "pst": 79.99
+  },
+  {
+   "efeito": -1.1,
+   "hora": "18:58",
+   "margem": 0.71,
+   "pst": 82.0
+  },
+  {
+   "efeito": -1.04,
+   "hora": "19:00",
+   "margem": 0.76,
+   "pst": 83.99
+  },
+  {
+   "efeito": -0.94,
+   "hora": "19:03",
+   "margem": 0.87,
+   "pst": 86.0
+  },
+  {
+   "efeito": -0.82,
+   "hora": "19:05",
+   "margem": 0.98,
+   "pst": 88.0
+  },
+  {
+   "efeito": -0.74,
+   "hora": "19:09",
+   "margem": 1.07,
+   "pst": 90.0
+  },
+  {
+   "efeito": -0.65,
+   "hora": "19:14",
+   "margem": 1.15,
+   "pst": 91.99
+  },
+  {
+   "efeito": -0.54,
+   "hora": "19:20",
+   "margem": 1.26,
+   "pst": 94.0
+  },
+  {
+   "efeito": -0.42,
+   "hora": "19:26",
+   "margem": 1.38,
+   "pst": 96.0
+  },
+  {
+   "efeito": -0.26,
+   "hora": "19:42",
+   "margem": 1.55,
+   "pst": 97.99
+  },
+  {
+   "efeito": -0.13,
+   "hora": "20:00",
+   "margem": 1.68,
+   "pst": 99.0
+  },
+  {
+   "efeito": -0.06,
+   "hora": "20:20",
+   "margem": 1.75,
+   "pst": 99.5
+  },
+  {
+   "efeito": 0.0,
+   "hora": "00:18",
+   "margem": 1.8,
+   "pst": 100.0
+  }
+ ],
+ "virada": {
+  "hora": "18:42",
+  "pst": 66.78
+ }
+}

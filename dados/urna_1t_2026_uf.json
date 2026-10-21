@@ -1,0 +1,282 @@
+{
+ "ac": {
+  "abst": 20.43,
+  "arquivo": "05/10/2026 12:51:40",
+  "bn": 3.94,
+  "flavio": 64.56,
+  "lula": 28.73,
+  "margem": -35.82,
+  "terceiros": 6.71,
+  "validos": 469066
+ },
+ "al": {
+  "abst": 20.63,
+  "arquivo": "05/10/2026 12:51:41",
+  "bn": 6.16,
+  "flavio": 40.45,
+  "lula": 54.73,
+  "margem": 14.28,
+  "terceiros": 4.82,
+  "validos": 1818856
+ },
+ "am": {
+  "abst": 20.16,
+  "arquivo": "05/10/2026 12:51:41",
+  "bn": 2.85,
+  "flavio": 45.0,
+  "lula": 48.23,
+  "margem": 3.24,
+  "terceiros": 6.77,
+  "validos": 2170763
+ },
+ "ap": {
+  "abst": 17.41,
+  "arquivo": "05/10/2026 12:51:40",
+  "bn": 2.45,
+  "flavio": 45.67,
+  "lula": 45.71,
+  "margem": 0.05,
+  "terceiros": 8.62,
+  "validos": 464858
+ },
+ "ba": {
+  "abst": 19.97,
+  "arquivo": "05/10/2026 12:51:55",
+  "bn": 5.45,
+  "flavio": 28.53,
+  "lula": 66.17,
+  "margem": 37.64,
+  "terceiros": 5.29,
+  "validos": 8560291
+ },
+ "br": {
+  "abst": 21.08,
+  "arquivo": "05/10/2026 12:51:47",
+  "bn": 4.77,
+  "flavio": 47.03,
+  "lula": 45.16,
+  "margem": -1.87,
+  "terceiros": 7.81,
+  "validos": 119300788
+ },
+ "ce": {
+  "abst": 15.52,
+  "arquivo": "05/10/2026 12:51:44",
+  "bn": 4.95,
+  "flavio": 31.27,
+  "lula": 63.29,
+  "margem": 32.01,
+  "terceiros": 5.44,
+  "validos": 5617814
+ },
+ "df": {
+  "abst": 18.9,
+  "arquivo": "05/10/2026 12:51:40",
+  "bn": 3.2,
+  "flavio": 51.31,
+  "lula": 38.11,
+  "margem": -13.2,
+  "terceiros": 10.58,
+  "validos": 1772808
+ },
+ "es": {
+  "abst": 21.37,
+  "arquivo": "05/10/2026 12:51:41",
+  "bn": 4.3,
+  "flavio": 54.78,
+  "lula": 37.76,
+  "margem": -17.02,
+  "terceiros": 7.46,
+  "validos": 2251078
+ },
+ "go": {
+  "abst": 21.83,
+  "arquivo": "05/10/2026 12:51:44",
+  "bn": 3.62,
+  "flavio": 53.6,
+  "lula": 31.06,
+  "margem": -22.55,
+  "terceiros": 15.34,
+  "validos": 3827823
+ },
+ "ma": {
+  "abst": 19.73,
+  "arquivo": "05/10/2026 12:51:45",
+  "bn": 3.59,
+  "flavio": 30.9,
+  "lula": 63.99,
+  "margem": 33.1,
+  "terceiros": 5.11,
+  "validos": 4010439
+ },
+ "mg": {
+  "abst": 22.81,
+  "arquivo": "05/10/2026 12:52:05",
+  "bn": 5.23,
+  "flavio": 48.24,
+  "lula": 43.33,
+  "margem": -4.91,
+  "terceiros": 8.43,
+  "validos": 11976235
+ },
+ "ms": {
+  "abst": 23.87,
+  "arquivo": "05/10/2026 12:51:41",
+  "bn": 3.3,
+  "flavio": 58.6,
+  "lula": 34.68,
+  "margem": -23.92,
+  "terceiros": 6.71,
+  "validos": 1490278
+ },
+ "mt": {
+  "abst": 22.2,
+  "arquivo": "05/10/2026 12:51:42",
+  "bn": 2.86,
+  "flavio": 65.15,
+  "lula": 29.18,
+  "margem": -35.97,
+  "terceiros": 5.67,
+  "validos": 1993288
+ },
+ "pa": {
+  "abst": 19.1,
+  "arquivo": "05/10/2026 12:51:45",
+  "bn": 4.01,
+  "flavio": 44.5,
+  "lula": 49.91,
+  "margem": 5.41,
+  "terceiros": 5.59,
+  "validos": 4863172
+ },
+ "pb": {
+  "abst": 17.38,
+  "arquivo": "05/10/2026 12:51:44",
+  "bn": 6.34,
+  "flavio": 33.07,
+  "lula": 61.31,
+  "margem": 28.23,
+  "terceiros": 5.62,
+  "validos": 2513747
+ },
+ "pe": {
+  "abst": 18.17,
+  "arquivo": "05/10/2026 12:51:44",
+  "bn": 5.24,
+  "flavio": 31.03,
+  "lula": 63.45,
+  "margem": 32.42,
+  "terceiros": 5.52,
+  "validos": 5601017
+ },
+ "pi": {
+  "abst": 17.15,
+  "arquivo": "05/10/2026 12:51:46",
+  "bn": 4.21,
+  "flavio": 24.09,
+  "lula": 70.99,
+  "margem": 46.9,
+  "terceiros": 4.92,
+  "validos": 2146394
+ },
+ "pr": {
+  "abst": 20.57,
+  "arquivo": "05/10/2026 12:51:50",
+  "bn": 3.74,
+  "flavio": 59.91,
+  "lula": 31.2,
+  "margem": -28.71,
+  "terceiros": 8.89,
+  "validos": 6585243
+ },
+ "rj": {
+  "abst": 23.32,
+  "arquivo": "05/10/2026 12:51:43",
+  "bn": 4.97,
+  "flavio": 53.01,
+  "lula": 39.41,
+  "margem": -13.6,
+  "terceiros": 7.58,
+  "validos": 9369700
+ },
+ "rn": {
+  "abst": 18.38,
+  "arquivo": "05/10/2026 12:51:43",
+  "bn": 4.56,
+  "flavio": 34.77,
+  "lula": 59.75,
+  "margem": 24.98,
+  "terceiros": 5.48,
+  "validos": 2071898
+ },
+ "ro": {
+  "abst": 21.71,
+  "arquivo": "05/10/2026 12:51:40",
+  "bn": 2.32,
+  "flavio": 67.45,
+  "lula": 25.89,
+  "margem": -41.56,
+  "terceiros": 6.65,
+  "validos": 968059
+ },
+ "rr": {
+  "abst": 17.12,
+  "arquivo": "05/10/2026 12:51:40",
+  "bn": 2.17,
+  "flavio": 71.06,
+  "lula": 22.86,
+  "margem": -48.2,
+  "terceiros": 6.08,
+  "validos": 325545
+ },
+ "rs": {
+  "abst": 21.35,
+  "arquivo": "05/10/2026 12:51:50",
+  "bn": 4.17,
+  "flavio": 55.64,
+  "lula": 35.73,
+  "margem": -19.91,
+  "terceiros": 8.63,
+  "validos": 6423046
+ },
+ "sc": {
+  "abst": 18.95,
+  "arquivo": "05/10/2026 12:51:45",
+  "bn": 3.16,
+  "flavio": 66.65,
+  "lula": 25.04,
+  "margem": -41.61,
+  "terceiros": 8.3,
+  "validos": 4500897
+ },
+ "se": {
+  "abst": 17.3,
+  "arquivo": "05/10/2026 12:51:41",
+  "bn": 5.2,
+  "flavio": 30.63,
+  "lula": 62.75,
+  "margem": 32.12,
+  "terceiros": 6.62,
+  "validos": 1364196
+ },
+ "sp": {
+  "abst": 22.54,
+  "arquivo": "05/10/2026 12:51:59",
+  "bn": 5.86,
+  "flavio": 51.93,
+  "lula": 38.2,
+  "margem": -13.73,
+  "terceiros": 9.87,
+  "validos": 24882948
+ },
+ "to": {
+  "abst": 18.34,
+  "arquivo": "05/10/2026 12:51:42",
+  "bn": 3.6,
+  "flavio": 50.44,
+  "lula": 43.42,
+  "margem": -7.02,
+  "terceiros": 6.14,
+  "validos": 930447
+ }
+}

@@ -1,0 +1,176 @@
+{
+ "ac": {
+  "bolsonaro": 70.3,
+  "lula": 29.7,
+  "margem": -40.6,
+  "validos": 409316
+ },
+ "al": {
+  "bolsonaro": 41.32,
+  "lula": 58.68,
+  "margem": 17.36,
+  "validos": 1664658
+ },
+ "am": {
+  "bolsonaro": 48.9,
+  "lula": 51.1,
+  "margem": 2.2,
+  "validos": 1966732
+ },
+ "ap": {
+  "bolsonaro": 51.36,
+  "lula": 48.64,
+  "margem": -2.72,
+  "validos": 390465
+ },
+ "ba": {
+  "bolsonaro": 27.88,
+  "lula": 72.12,
+  "margem": 44.24,
+  "validos": 8454843
+ },
+ "br": {
+  "bolsonaro": 49.1,
+  "lula": 50.9,
+  "margem": 1.8,
+  "validos": 118552353
+ },
+ "ce": {
+  "bolsonaro": 30.03,
+  "lula": 69.97,
+  "margem": 39.94,
+  "validos": 5442368
+ },
+ "df": {
+  "bolsonaro": 58.81,
+  "lula": 41.19,
+  "margem": -17.62,
+  "validos": 1770626
+ },
+ "es": {
+  "bolsonaro": 58.04,
+  "lula": 41.96,
+  "margem": -16.09,
+  "validos": 2208912
+ },
+ "go": {
+  "bolsonaro": 58.71,
+  "lula": 41.29,
+  "margem": -17.43,
+  "validos": 3735156
+ },
+ "ma": {
+  "bolsonaro": 28.86,
+  "lula": 71.14,
+  "margem": 42.27,
+  "validos": 3751174
+ },
+ "mg": {
+  "bolsonaro": 49.8,
+  "lula": 50.2,
+  "margem": 0.4,
+  "validos": 12332270
+ },
+ "ms": {
+  "bolsonaro": 59.49,
+  "lula": 40.51,
+  "margem": -18.99,
+  "validos": 1480153
+ },
+ "mt": {
+  "bolsonaro": 65.08,
+  "lula": 34.92,
+  "margem": -30.17,
+  "validos": 1869516
+ },
+ "pa": {
+  "bolsonaro": 45.25,
+  "lula": 54.75,
+  "margem": 9.5,
+  "validos": 4582979
+ },
+ "pb": {
+  "bolsonaro": 33.38,
+  "lula": 66.62,
+  "margem": 33.25,
+  "validos": 2404455
+ },
+ "pe": {
+  "bolsonaro": 33.07,
+  "lula": 66.93,
+  "margem": 33.86,
+  "validos": 5439765
+ },
+ "pi": {
+  "bolsonaro": 23.14,
+  "lula": 76.86,
+  "margem": 53.72,
+  "validos": 2018448
+ },
+ "pr": {
+  "bolsonaro": 62.4,
+  "lula": 37.6,
+  "margem": -24.79,
+  "validos": 6665948
+ },
+ "rj": {
+  "bolsonaro": 56.53,
+  "lula": 43.47,
+  "margem": -13.05,
+  "validos": 9560111
+ },
+ "rn": {
+  "bolsonaro": 34.9,
+  "lula": 65.1,
+  "margem": 30.19,
+  "validos": 2038166
+ },
+ "ro": {
+  "bolsonaro": 70.66,
+  "lula": 29.34,
+  "margem": -41.33,
+  "validos": 896140
+ },
+ "rr": {
+  "bolsonaro": 76.08,
+  "lula": 23.92,
+  "margem": -52.16,
+  "validos": 280646
+ },
+ "rs": {
+  "bolsonaro": 56.35,
+  "lula": 43.65,
+  "margem": -12.7,
+  "validos": 6625036
+ },
+ "sc": {
+  "bolsonaro": 69.27,
+  "lula": 30.73,
+  "margem": -38.54,
+  "validos": 4399548
+ },
+ "se": {
+  "bolsonaro": 32.79,
+  "lula": 67.21,
+  "margem": 34.41,
+  "validos": 1284037
+ },
+ "sp": {
+  "bolsonaro": 55.24,
+  "lula": 44.76,
+  "margem": -10.48,
+  "validos": 25736469
+ },
+ "to": {
+  "bolsonaro": 48.64,
+  "lula": 51.36,
+  "margem": 2.71,
+  "validos": 846247
+ },
+ "zz": {
+  "bolsonaro": 48.72,
+  "lula": 51.28,
+  "margem": 2.56,
+  "validos": 298169
+ }
+}
