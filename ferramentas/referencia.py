@@ -149,6 +149,7 @@ def main():
     if a.munzona: gravar("urna_2t_2022_uf.json", munzona_2t_2022(a.munzona))
     curva, det, u26, u22 = ler("curva_2t_2022.json"), ler("detalhe_2t_2022_uf.json"), ler("urna_1t_2026_uf.json"), ler("urna_2t_2022_uf.json")
     pq = ler("pesquisas_2t.json"); prior = prior_pesquisas(pq) if pq else None
+    gov = ler("governador_2t.json") or {}
     faltam = [n for n, v in (("curva", curva), ("detalhe", det), ("urna 1T 2026", u26), ("urna 2T 2022", u22)) if v is None]
     if faltam: sys.exit(f"faltam dados: {faltam}")
     ref = {"gerado": datetime.datetime.now().isoformat(timespec="minutes"),
@@ -156,7 +157,8 @@ def main():
            "horas": {str(int(round(p["pst"]))): p["hora"] for p in curva["pontos"] if int(round(p["pst"])) in (2, 5, 10, 20, 30, 40, 50, 60, 68, 70, 80, 90, 95, 99, 100)},
            "virada2022": curva["virada"], "final2022": curva["final"],
            "uf2022": {u: {"margem": u22[u]["margem"], "lula": u22[u]["lula"], "abst": det[u]["abst"], "bn": det[u]["bn"]} for u in UFS + ["br"]},
-           "uf2026": {u: {"margem": u26[u]["margem"], "lula": u26[u]["lula"], "flavio": u26[u]["flavio"], "abst": u26[u]["abst"], "bn": u26[u]["bn"]} for u in UFS + ["br"]},
+           "uf2026": {u: {"margem": u26[u]["margem"], "lula": u26[u]["lula"], "flavio": u26[u]["flavio"], "terceiros": u26[u]["terceiros"], "abst": u26[u]["abst"], "bn": u26[u]["bn"], "validos": u26[u]["validos"]} for u in UFS + ["br"]},
+           "gov2t": gov.get("com_2t_governador", []),
            "prior": prior,
            "replay2022": curva.get("serie")}
     open(os.path.join(DOCS, "referencia.js"), "w").write("// gerado por ferramentas/referencia.py a partir dos arquivos oficiais do TSE; não editar à mão\nwindow.REF=" + json.dumps(ref, ensure_ascii=False, separators=(",", ":")) + ";\n")

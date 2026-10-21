@@ -1,14 +1,10 @@
 # Apuração 2026 · 2º turno
 
-Página estática que lê os arquivos oficiais do Divulga/TSE direto do navegador e mostra, a cada 2 minutos:
+Página estática que lê os arquivos oficiais do Divulga/TSE direto do navegador a cada 2 minutos. Duas telas e um "como a conta é feita":
 
-- o placar Lula × Flávio em votos válidos, abstenção e brancos + nulos, contra o 2º turno de 2022 e o 1º turno de 2026;
-- a **chance de vitória**: antes da urna, pelas pesquisas corrigidas pelo erro do 1º turno; durante a apuração, combinada com a régua;
-- a **régua**: a margem final que a parcial sugere, descontada a ordem de chegada das seções medida no 2º turno de 2022;
-- os **institutos**: a última onda de cada um e, ao vivo, a distância para a implícita da régua;
-- SP, MG, RJ, BA e PE contra 2022 e contra o 1º turno;
-- a abstenção por estado contra o próprio estado no 1º turno e em 2022;
-- a curva da noite sobre as curvas esperadas para Lula +2, empate e Flávio +2.
+1. **Chance de vitória** e o placar Lula × Flávio em votos válidos. Antes da urna, a chance vem das pesquisas corrigidas pelo erro do 1º turno; durante a apuração, combinada com a régua.
+2. **A aposta de cada campanha, contra o 1º turno:** abstenção nacional e no Nordeste (o eleitor que faltou no 1º turno, que a campanha de Lula foi buscar); abstenção nos 21 estados sem 2º turno de governador contra os 6 com (o medo do PL, de que seu eleitor ficasse em casa); brancos e nulos; e a fatia dos votos dos eliminados que foi a Lula, contra os ~62% de que ele precisava (Folha), que só fecha no fim da noite.
+3. **Como a conta é feita**, recolhido: a **régua** (a margem final que a parcial sugere, descontada a ordem de chegada das seções medida no 2º turno de 2022), os **institutos** com a distância para a implícita, SP, MG, RJ, BA e PE contra 2022 e o 1º turno, a abstenção por estado, a curva da noite e o histórico de leituras.
 
 Nada sai do navegador: o histórico de leituras fica em `localStorage`. `?demo=1` mostra a página cheia com dados fictícios (`&pst=20` muda a fatia, `&final=-1` o resultado hipotético). `?replay=2022` é o **ensaio**: percorre a apuração real do 2º turno de 2022 ponto a ponto (`&ms=200` acelera), com a chance vindo só da régua. Se o arquivo do TSE ficar 10 minutos sem mudar durante a apuração, o selo do topo avisa "TSE parado".
 
@@ -18,7 +14,7 @@ Nada sai do navegador: o histórico de leituras fica em `localStorage`. `?demo=1
 - `docs/referencia.js` — dados de referência que a página carrega; gerado, não editar à mão.
 - `ferramentas/referencia.py` — gera `dados/*.json` e `docs/referencia.js` a partir das fontes primárias do TSE.
 - `ferramentas/apuracao.py` — a mesma régua no terminal, com log em CSV e, em `--loop`, os arquivos brutos do TSE de cada leitura (nacional, 27 UFs e exterior) em `dados/noite/*.json.gz`, fora do git. É a matéria-prima para reconstruir a curva de 2026 por estado depois.
-- `dados/` — referências em JSON (curva de 2022, urna de 2022 e do 1º turno por UF, abstenção) e `pesquisas_2t.json`, mantido à mão, com as pesquisas de 2º turno e o erro de cada instituto no 1º turno.
+- `dados/` — referências em JSON (curva de 2022, urna de 2022 e do 1º turno por UF, abstenção), `governador_2t.json` (os seis estados com 2º turno de governador, da configuração oficial do TSE) e `pesquisas_2t.json`, mantido à mão, com as pesquisas de 2º turno e o erro de cada instituto no 1º turno.
 
 ## Rodar
 
@@ -49,6 +45,8 @@ Se o TSE parar de responder: a página tenta de novo sozinha a cada 2 minutos e 
 Margem final implícita = margem parcial − k × efeito, onde efeito é a diferença entre a margem parcial e a final de Lula na mesma fatia de seções no 2º turno de 2022 (fonte: histórico oficial de totalização do TSE). k = 1 supõe que a diferença entre regiões é a de 2022, como ocorreu no 1º turno de 2026, em que o país inteiro se moveu por igual; k = 0,5 supõe que ela se achatou pela metade. A leitura em texto segue regras fixadas antes da apuração: a partir de 15% das seções, implícita acima de +1 tende a Lula, abaixo de −1 tende a Flávio, entre as duas é empate técnico.
 
 **Chance de vitória.** Prior: última onda de cada instituto com campo encerrado a partir da data de corte, margem Lula − Flávio entre os dois, corrigida por `fator_correcao` (0,5) × erro do mesmo instituto no 1º turno de 2026; centro = média das corrigidas; incerteza `sigma0` = 3,3 pontos (erro das finais de 2º turno Datafolha/Ibope-Ipec 2006–2022, cerca de 2,5, combinado com a dúvida sobre aplicar metade ou todo o erro do 1º turno). Atualização: a implícita da régua entra como observação com incerteza 0,3 × |efeito restante| + 0,15; a chance é a combinação das duas, cada uma pesada pelo inverso da variância. Aos 100% a chance é 0 ou 100. Parâmetros em `dados/pesquisas_2t.json`.
+
+**Apostas das campanhas.** Abstenção por estado entra na média só com 30% ou mais das seções do estado, pesada pelos votos válidos do 1º turno, e sempre contra o mesmo estado no 1º turno. Votos dos eliminados: (fatia de Lula nos válidos agora − fatia no 1º turno) ÷ fatia dos eliminados no 1º turno (7,81%), a partir de 90% das seções; abstenção e nulos entram nessa diferença, por isso é aproximação. Fontes das apostas: Quaest 14/10 (entre ausentes, brancos e nulos do 1º turno, Lula 43 × 38), Folha/Voto a Voto 06/10 (Lula precisa de ~62% dos eliminados), Bela Megale/O Globo 13/10 (o PL teme a abstenção onde não há 2º turno de governador).
 
 ## Fontes
 
