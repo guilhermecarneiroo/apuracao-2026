@@ -1,10 +1,10 @@
 {
   "nota": "Pesquisas de 2º turno com campo depois da urna de 04/10/2026, Lula × Flávio entre os dois (válidos). erro_1t = margem da urna − margem da pesquisa final do instituto no 1º turno (negativo = superestimou Lula); Ipespe sem final própria usa a média do modo telefônico. Fonte interna: stf-caso-master/ferramentas/pesquisas_1t.py §8 e §10; registros BR-xxxxx no TSE. Mantido à mão; corte define quais ondas entram no prior.",
-  "corte": "2026-10-14",
-  "fator_correcao": 0.5,
+  "corte": "2026-10-20",
+  "fator_correcao": 0.3,
   "sigma0": 3.3,
   "sigma0_nota": "erro das finais de 2º turno Datafolha/Ibope-Ipec 2006–2022 na margem, RMSE ≈ 2,5 (de memória, conferir), combinado com a incerteza de aplicar metade ou todo o erro do 1º turno (≈ 2,2).",
-  "revisao": "Fator 0,5 fixado em 21/10/2026. Ponto de revisão: depois das pesquisas finais de 24/10. Baixar para ~0,3 se todas as casas, inclusive Gerp e Futura (as que acertaram o 1º turno), convergirem para o mesmo número; manter ou subir se as presenciais empatarem enquanto Gerp e Futura abrirem para Flávio. Fora desses dois casos, não mexer.",
+  "revisao": "Fator 0,5 fixado em 21/10/2026. Ponto de revisão: depois das pesquisas finais de 24/10. Baixar para ~0,3 se todas as casas, inclusive Gerp e Futura (as que acertaram o 1º turno), convergirem para o mesmo número; manter ou subir se as presenciais empatarem enquanto Gerp e Futura abrirem para Flávio. Fora desses dois casos, não mexer. REVISÃO FEITA em 25/10/2026, 14h30: as oito finais (campo 23–24/10) convergiram em Flávio +1 a +4, média +2,0, mediana +1,8, nenhuma com Lula, inclusive Gerp (+4) e Palver (+1), que acertaram o 1º turno; Futura não publicou final. Pela regra (b), fator baixado para 0,3. Corte movido para 20/10. Fontes: briefings de 22, 23 e 24/10 do dossiê (g1, Folha, CartaCapital, Poder360, Gazeta).",
   "pesquisas": [
     {
       "inst": "PoderData/Aya",
@@ -247,6 +247,182 @@
       "flavio": 51.1,
       "erro_1t": -4.8,
       "reg": "BR-02418"
+    },
+    {
+      "inst": "Quaest",
+      "onda": "2ª",
+      "fim": "2026-10-20",
+      "n": 2154,
+      "modo": "pres",
+      "lula": 49.4,
+      "flavio": 50.6,
+      "erro_1t": -4.2,
+      "reg": "BR-08535"
+    },
+    {
+      "inst": "PoderData/Aya",
+      "onda": "5ª",
+      "fim": "2026-10-21",
+      "n": 4000,
+      "modo": "ivr",
+      "lula": 49.0,
+      "flavio": 51.0,
+      "erro_1t": -3.0,
+      "reg": "BR-07926"
+    },
+    {
+      "inst": "Indexa/Broadcast",
+      "onda": "2ª",
+      "fim": "2026-10-21",
+      "n": 2000,
+      "modo": "tel",
+      "lula": 49.4,
+      "flavio": 50.6,
+      "erro_1t": -7.8,
+      "reg": "BR-02348"
+    },
+    {
+      "inst": "Gerp",
+      "onda": "2ª",
+      "fim": "2026-10-21",
+      "n": 2400,
+      "modo": "pres",
+      "lula": 47.0,
+      "flavio": 53.0,
+      "erro_1t": 0.2,
+      "reg": "BR-03835"
+    },
+    {
+      "inst": "Datafolha",
+      "onda": "3ª",
+      "fim": "2026-10-22",
+      "n": 2154,
+      "modo": "pres",
+      "lula": 50.0,
+      "flavio": 50.0,
+      "erro_1t": -4.1,
+      "reg": "BR-09709"
+    },
+    {
+      "inst": "Vox Brasil",
+      "onda": "3ª",
+      "fim": "2026-10-22",
+      "n": 2100,
+      "modo": "pres",
+      "lula": 50.6,
+      "flavio": 49.4,
+      "erro_1t": -1.0,
+      "reg": "BR-03259"
+    },
+    {
+      "inst": "Ipespe/Abrapel",
+      "onda": "3ª",
+      "fim": "2026-10-22",
+      "n": 1500,
+      "modo": "tel",
+      "lula": 49.5,
+      "flavio": 50.5,
+      "erro_1t": -4.6,
+      "reg": "BR-04350"
+    },
+    {
+      "inst": "Real Time Big Data",
+      "onda": "1ª",
+      "fim": "2026-10-22",
+      "n": 2000,
+      "modo": "pres",
+      "lula": 48.0,
+      "flavio": 52.0,
+      "erro_1t": -6.1,
+      "reg": "BR-09670"
+    },
+    {
+      "inst": "AtlasIntel",
+      "onda": "3ª",
+      "fim": "2026-10-23",
+      "n": 4990,
+      "modo": "online",
+      "lula": 49.2,
+      "flavio": 50.8,
+      "erro_1t": -4.8,
+      "reg": "BR-06380"
+    },
+    {
+      "inst": "CNT/MDA",
+      "onda": "2ª",
+      "fim": "2026-10-23",
+      "n": 2032,
+      "modo": "pres",
+      "lula": 49.3,
+      "flavio": 50.7,
+      "erro_1t": -7.5,
+      "reg": "BR-02136"
+    },
+    {
+      "inst": "Instituto França",
+      "onda": "1ª",
+      "fim": "2026-10-23",
+      "n": 1537,
+      "modo": "tel",
+      "lula": 48.6,
+      "flavio": 51.4,
+      "erro_1t": -5.3,
+      "reg": "BR-04863"
+    },
+    {
+      "inst": "Datafolha",
+      "onda": "4ª",
+      "fim": "2026-10-24",
+      "n": 4050,
+      "modo": "pres",
+      "lula": 49.0,
+      "flavio": 51.0,
+      "erro_1t": -4.1,
+      "reg": "BR-09540"
+    },
+    {
+      "inst": "Quaest",
+      "onda": "3ª",
+      "fim": "2026-10-24",
+      "n": 3702,
+      "modo": "pres",
+      "lula": 49.0,
+      "flavio": 51.0,
+      "erro_1t": -4.2,
+      "reg": "BR-09158"
+    },
+    {
+      "inst": "Nexus/BTG",
+      "onda": "3ª",
+      "fim": "2026-10-24",
+      "n": 2000,
+      "modo": "tel",
+      "lula": 49.5,
+      "flavio": 50.5,
+      "erro_1t": -7.2,
+      "reg": "BR-08234"
+    },
+    {
+      "inst": "Gerp",
+      "onda": "3ª",
+      "fim": "2026-10-24",
+      "n": 2400,
+      "modo": "tel",
+      "lula": 48.0,
+      "flavio": 52.0,
+      "erro_1t": 0.2,
+      "reg": "BR-09327"
+    },
+    {
+      "inst": "Palver",
+      "onda": "2ª",
+      "fim": "2026-10-24",
+      "n": 5000,
+      "modo": "online",
+      "lula": 49.5,
+      "flavio": 50.5,
+      "erro_1t": 2.2,
+      "reg": "BR-01794"
     }
   ]
 }

@@ -36,7 +36,7 @@ Para refazer `dados/urna_2t_2022_uf.json` é preciso o `votacao_candidato_munzon
 | hora | o quê |
 |---|---|
 | 16h50 | `python3 ferramentas/apuracao.py --probe` confirma que os três arquivos do TSE respondem. Abrir a página no celular e deixar "a cada 2 min" ligado. |
-| 17h00 | `python3 ferramentas/apuracao.py --loop 120` num terminal que fique aberto a noite inteira. Cada leitura imprime a régua, grava uma linha em `dados/log_2t_2026.csv` e um `.json.gz` em `dados/noite/`. |
+| 17h00 | `zsh ferramentas/noite.sh` num terminal que fique aberto a noite inteira. Roda o probe, o logger da página (régua, `dados/log_2t_2026.csv` e os brutos em `dados/noite/*.json.gz`) e, ao lado, a régua regional do dossiê (`stf-caso-master/ferramentas/pesquisas_2t_regioes.py --live`), gravada em `dados/noite/regioes.txt`. Ctrl+C encerra os dois. |
 | 17h–18h | Até 15% das seções a página diz "cedo demais"; a chance quase não sai do prior. Em 2022, 20% foi às 17h49. |
 | ~18h30 | Em 2022, 50% foi às 18h26 e a virada de Lula veio aos 66,8%, às 18h42. É a faixa em que a régua passa a valer mais que as pesquisas. |
 | ~20h | Em 2022, 99% foi às 20h00. A chance deve estar perto de 0 ou 100. |
