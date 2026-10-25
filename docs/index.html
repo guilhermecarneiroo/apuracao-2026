@@ -353,12 +353,12 @@ function proximoMarco(pst){ const m=MARCOS.find(x=>x>pst); if(m==null) return "e
 function renderFaixa(mu,sd){
   const LIM=8, pos=x=>50+50*Math.max(-LIM,Math.min(LIM,x))/LIM;
   if(mu==null){ $("faixav").textContent="–"; $("faixav").className="fv"; $("fxband").style.left="50%"; $("fxband").style.width="0"; $("fxband").className="fx-band"; $("fxdot").className="fx-dot"; return; }
-  const lo=mu-sd, hi=mu+sd, d=sd<1?1:0, n=x=>fmt(Math.abs(x),d);
+  const d=sd<1?1:0, q=d?10:1, lo=Math.round((mu-sd)*q)/q, hi=Math.round((mu+sd)*q)/q, n=x=>fmt(Math.abs(x),d);   // arredonda antes de decidir o lado, para não sair "Lula por 0"
   const a=pos(lo), b=pos(hi); $("fxband").style.left=Math.min(a,b)+"%"; $("fxband").style.width=Math.abs(b-a)+"%";
   $("fxdot").style.left=pos(mu)+"%"; $("fxdot").className="fx-dot on"; $("fxdot").style.background=mu>0.05?"var(--lula)":(mu<-0.05?"var(--flavio)":"var(--fg)");
   let faixa, lado="";
-  if(lo>0){ faixa=`faixa provável: Lula por ${n(lo)} a ${n(hi)}`; lado="lula"; }
-  else if(hi<0){ faixa=`faixa provável: Flávio por ${n(hi)} a ${n(lo)}`; lado="flavio"; }
+  if(lo>=0&&hi>0){ faixa=`faixa provável: Lula por ${n(lo)} a ${n(hi)}`; lado="lula"; }
+  else if(hi<=0&&lo<0){ faixa=`faixa provável: Flávio por ${n(hi)} a ${n(lo)}`; lado="flavio"; }
   else { faixa=`faixa provável: de Flávio por ${n(lo)} a Lula por ${n(hi)}`; }
   const quem=mu>0.05?"Lula":(mu<-0.05?"Flávio":null);
   $("faixav").textContent=quem?`Mais provável: ${quem} por ${fmt(Math.abs(mu),1)} pontos`:"Mais provável: empate"; $("faixav").className="fv "+cls(mu);
