@@ -50,12 +50,12 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute
 /* chance: o placar de TV */
 .chance{display:grid;grid-template-columns:auto 1fr;gap:0 16px;align-items:center}
 .fotos{position:relative;width:168px;height:132px}
-.anel{position:absolute;left:0;top:0;width:132px;height:132px;z-index:1}
-.atras{position:absolute;left:100px;top:10px;width:68px;height:68px;border-radius:50%;overflow:hidden;z-index:0;border:3px solid var(--bg);background:var(--track)}
+.anel{position:absolute;left:36px;top:0;width:132px;height:132px;z-index:1}
+.atras{position:absolute;left:0;top:8px;width:68px;height:68px;border-radius:50%;overflow:hidden;z-index:0;border:3px solid var(--bg);background:var(--track)}
 .atras img{width:100%;height:100%;object-fit:cover;display:block}
 .num{text-align:right;min-width:0}
 .num .pv{font-size:64px;font-weight:800;line-height:1;letter-spacing:-.03em;font-variation-settings:"wdth" 100}
-.num .quem{font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:6px}
+.num .quem{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.14em;font-weight:600;margin-bottom:6px}
 .chance .barra{grid-column:1/-1;margin-top:12px}
 .chance .meta{grid-column:1/-1;margin-top:8px}
 .barra{position:relative;height:16px;background:var(--track);overflow:hidden;display:flex;gap:2px}
@@ -159,7 +159,7 @@ h2{display:flex;align-items:center;justify-content:space-between;gap:12px}
     <svg class="anel" id="anelFav" viewBox="0 0 120 120" role="img" aria-label="Favorito"><defs><clipPath id="clipFav"><circle cx="60" cy="60" r="42"/></clipPath></defs><circle cx="60" cy="60" r="50" fill="none" stroke="var(--track)" stroke-width="8"/><circle id="arc" cx="60" cy="60" r="50" fill="none" stroke="var(--fg)" stroke-width="8" stroke-dasharray="0 400" transform="rotate(-90 60 60)"/><image id="fotoFav" href="" x="18" y="18" width="84" height="84" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipFav)"/></svg>
     <div class="atras"><img id="fotoOutro" src="" alt=""></div>
   </div>
-  <div class="num"><div class="pv" id="pFav">–</div><div class="quem" id="quemFav">—</div></div>
+  <div class="num"><div class="quem" id="quemFav">—</div><div class="pv" id="pFav">–</div></div>
   <div class="barra" id="pbar" aria-hidden="true"><div class="l" style="width:50%"></div><div class="f" style="width:50%"></div></div>
   <div class="veredito" id="veredito">—</div>
   <div class="meta" id="pmeta">—</div>
@@ -370,7 +370,7 @@ function mostrarFavorito(fav,p){
   $("fotoFav").setAttribute("href",FOTO[fav]); $("fotoOutro").src=FOTO[outro]; $("fotoOutro").alt=NOME[outro];
   $("anelFav").setAttribute("aria-label",`${NOME[fav]}, ${fmt(p,0)}% de chance de ser presidente`);
   $("arc").setAttribute("stroke-dasharray",`${C*p/100} ${C}`); $("arc").setAttribute("stroke",fav==="L"?"var(--lula)":"var(--flavio)");
-  $("pFav").textContent=fmt(p,0)+"%"; $("pFav").className="pv "+(fav==="L"?"pos":"neg"); $("quemFav").textContent=NOME[fav];
+  $("pFav").textContent=fmt(p,0)+"%"; $("pFav").className="pv "+(fav==="L"?"pos":"neg"); $("quemFav").textContent=NOME[fav]; $("quemFav").className="quem "+(fav==="L"?"pos":"neg");
 }
 function renderChance(post){
   if(!PRIOR){ $("pmeta").textContent="sem pesquisas carregadas"; return; }
