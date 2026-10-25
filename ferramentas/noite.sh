@@ -7,7 +7,7 @@ DOSSIE="/Users/guilhermecarneiro/Code/stf-caso-master"
 mkdir -p "$RAIZ/dados/noite"
 echo "== probe do TSE =="; python3 "$RAIZ/ferramentas/apuracao.py" --probe
 echo; echo "== logger da página (dados/log_2t_2026.csv + dados/noite/*.json.gz) =="
-python3 "$RAIZ/ferramentas/apuracao.py" --loop 120 2>&1 | tee -a "$RAIZ/dados/noite/logger.txt" &
+python3 -u "$RAIZ/ferramentas/apuracao.py" --loop 120 2>&1 | tee -a "$RAIZ/dados/noite/logger.txt" &
 P1=$!
 echo "== régua regional do dossiê (dados/noite/regioes.txt), a cada 2 min =="
 ( while true; do echo "----- $(date '+%H:%M:%S') -----"; python3 "$DOSSIE/ferramentas/pesquisas_2t_regioes.py" --live --ele 6258 2>&1 | sed -n '/§5/,$p'; sleep 120; done ) >> "$RAIZ/dados/noite/regioes.txt" 2>&1 &
